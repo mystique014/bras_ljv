@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'bras_ljv'
+project = ''
 copyright = '2022, S.Duchemin et Q.Duchemin'
 author = 'S.Duchemin et Q.Duchemin'
 
@@ -65,6 +65,7 @@ html_theme = 'furo'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static','_static/images']
-
+html_logo="_static/images/logo.png"
+html_title=""
 
 
