@@ -5,53 +5,79 @@ BRAS ROBOTISE COMMANDE A DISTANCE
 Description du projet
 ---------------------
 
-``bras_ljv`` est un package Python permettant de contrôler un bras robotisé à l'aide d'une interface virtuelle. 
+``bras_ljv`` est un package Python permettant de contrôler un bras robotisé à l'aide d'une interface virtuelle.
+
+.. image:: ./_static/images/bras_onshape.png
+  :width: 400
 
 Composantes du projet
 ---------------------
 
 Le projet mobilise des outils
 
+-- De réseau informatique
+    Connexion en Point d'accès ou Ethernet
+
 -- De programmation
+    Code python
+
+-- De visualisation
+    Lien virtuel / Réel
+
+-- D'algorithmique
+    Réaliser un ordonnacement de tâches
+
+-- De construction et modélisation
+    Assemblage du robot réel, Virtuel avec Onshape
+
+-- De connectique
+    Cablage du Raspberry pi, servos, interface PWM
 
 
-Application du projet
----------------------
-Cet outi
-
-- SIGLE: a valid procedure for Selective Inference with the Generalized Linear Lasso. This is a new method based on a conditional MLE viewpoint to tackle selective inference in the logistic model. This method can be deployed for both the selected and the saturated model and is fully described in the following paper.
-
-
-.. code-block:: bibtex
-
-    @InProceedings{sigle2022,
-      title     = {SIGLE: a valid procedure for Selective Inference with the Generalized Linear Lasso},
-      author    = {Duchemin, Quentin and De Castro, Yohann},
-      year      = {2022},
-    }
-
-- the method a Taylor & Tibshirani (see `their paper <https://arxiv.org/abs/1602.07358>`_).
-
-Why ``PSILOGIT``?
------------------
-
-
-``PSILOGIT`` is specially designed to address composite hypothesis testing problem after model selection using the non-zero coefficients obtained solving the :math:`\ell_1`-penalised logistic regression. 
-
-Our experiments have shown that the method from Taylor & Tibshirani is most of the time correctly calibrated but the authors do not provide theoretical guarantees for their approach. Their method is motivated by non rigorous asymptotic considerations. In `our paper <https://hal.archives-ouvertes.fr/hal-03622196>`_, we are the fist to propose a method for selective inference in the logistic model with theoratical guarantees under some well defined conditions.
-
-We show in `our paper <https://hal.archives-ouvertes.fr/hal-03622196>`_ that SIGLE seems always more powerful than the approach from `Taylor and Tibshirani <https://arxiv.org/abs/1602.07358>`_.
-
-
-
-Explore the documentation
+Applications pédagogiques
 -------------------------
+
+-- Commander un bras réel à partir d'une interface virtuelle
+
+.. image:: ./_static/images/interface.png
+  :width: 400
+
+-- Trouver un algorithme pour réaliser un déplacement d'objets
+
+.. image:: ./_static/images/algo.png
+  :width: 200
+
+-- Gérer les obstacles
+
+
+Autres Applications
+-------------------
+
+-- Ajout d'une pince à la place de la ventouse
+    Augmentation de la zone de préhension (la pince n'étant plus forcément verticale ! )
+
+-- Reconnaissance optique d'objets:
+    Déplacer, Trier, Ordonner --> déplacer, trier, ordonner des objets de façon automatique selon leur famille (forme, couleur, information ...)
+    A partir de photos de l'environnement du robot, ils'agirait d'exploiter des algorithmes dits de 'Computer vision' (Détection automatique d'objets, reconstruction d'espaces en 3D).
+    Une fois la scène ainsi recontruite le robot peut effectuer les tâches demandées.
+    
+    Exemple :
+
+        1- Localiser à partir de photos des jetons numérotés sur un plateau de jeu
+
+        2- Le robot empile automatiquement les jetons par numéros croissants
+
+-- Ajout d'une base motorisée :
+    Reconnaissance d'objets dans un espace pour leur traitement 
+
+Structure de la documentation
+-----------------------------
 
 .. toctree::
     :maxdepth: 1
 
     presentation_robot/index.rst
     presentation_interface/index.rst
-    connection_reel_virtuel.rst
+    essentiel.rst
     exercices/index.rst
     perspectives/index.rst

@@ -1,2 +1,0 @@
-Connection réel-virtuel
-=======================
