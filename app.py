@@ -24,9 +24,9 @@ from user import *
 
 
 dbc_css = "./static/dbc.min.css"
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY, dbc_css], use_pages=True, suppress_callback_exceptions=True
+dbc_minty = "./static/dbc_minty.css"
+app = dash.Dash(__name__, external_stylesheets=[dbc_minty, dbc_css], use_pages=True, suppress_callback_exceptions=True
 )
-
 
 user = User()
 
