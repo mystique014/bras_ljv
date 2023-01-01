@@ -62,38 +62,62 @@ Storage = dcc.Store(
 Storage_current = dcc.Store(
         id='storage_exo_current',
         data=[])
+
+
+
+Choice_shape = dcc.Dropdown(
+   options=list(shapes.available_shapes.keys()),
+   value='Cylindre',
+   id="choice_shape"
+)
 Bx = dcc.Slider(-200, 200, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
-           value=shapes.bx, id = 'Bx', vertical=True,
+           value=shapes.shape.bx, id = 'Bx', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
 By = dcc.Slider(-200, 200, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
-           value=shapes.by, id = 'By', vertical=True,
+           value=shapes.shape.by, id = 'By', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
 Bz = dcc.Slider(0, 100, 1, 
            marks={str(i): str(i) for i in np.arange(0,200,50)},
-           value=shapes.bz, id = 'Bz', vertical=True,
+           value=shapes.shape.bz, id = 'Bz', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
 Ex = dcc.Slider(-200, 200, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
-           value=shapes.ex, id = 'Ex', vertical=True,
+           value=shapes.shape.ex, id = 'Ex', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
 Ey = dcc.Slider(-200, 200, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
-           value=shapes.ey, id = 'Ey', vertical=True,
+           value=shapes.shape.ey, id = 'Ey', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
 Ez = dcc.Slider(0, 200, 1, 
            marks={str(i): str(i) for i in np.arange(0,200,50)},
-           value=shapes.ez, id = 'Ez', vertical=True,
+           value=shapes.shape.ez, id = 'Ez', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
-R = dcc.Slider(1, 40, 1, 
+r = dcc.Slider(1, 40, 1, 
            marks={str(i): str(i) for i in np.arange(0,40,5)},
-           value=10, id = 'R', vertical=True,
+           value=Cylindre().default_params['r'], id = 'r', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
-H = dcc.Slider(1, 40, 1, 
+h = dcc.Slider(1, 40, 1, 
            marks={str(i): str(i) for i in np.arange(0,40,5)},
-           value=10, id = 'H', vertical=True,
+           value=Cylindre().default_params['h'], id = 'h', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
+largeur = dcc.Slider(1, 40, 1, 
+           marks={str(i): str(i) for i in np.arange(0,40,5)},
+           value=Rectangle().default_params['largeur'], id = 'largeur', vertical=True,
+           tooltip={"placement": "bottom", "always_visible": True})
+
+longueur = dcc.Slider(1, 40, 1, 
+           marks={str(i): str(i) for i in np.arange(0,40,5)},
+           value=Rectangle().default_params['longueur'], id = 'longueur', vertical=True,
+           tooltip={"placement": "bottom", "always_visible": True})
+
+
+theta = dcc.Slider(1, 180, 1, 
+           marks={str(i): str(i) for i in np.arange(0,180,20)},
+           value=Rectangle().default_params['theta'], id = 'theta', vertical=True,
+           tooltip={"placement": "bottom", "always_visible": True})
+
 admis = dcc.Checklist(
     [{"label": "Montrer les points admissibles", "value": 'show'}], value=['show'], id='admis'
 )
@@ -141,13 +165,15 @@ layout = dbc.Container(
      admis_exo, admis_carte, admis_coord, 
      Storage,Storage_current,
      dbc.Row([dbc.Col(dcc.Graph(id = 'plot_exo', figure = fig)),
-              dbc.Col([dbc.Row([
+              dbc.Col([dbc.Row([ dbc.Col(html.P([html.Label("Choix d'une forme: "), Choice_shape]))]),                  
+                      dbc.Row([
                                   html.Label("Position initiale"),
                                   dbc.Col(html.P([html.Label("x initial"),Bx])), 
                                   dbc.Col(html.P([html.Label("y initial"),By])),
                                   dbc.Col(html.P([html.Label("z initial"),Bz])),
-                                dbc.Col(html.P([html.Label("hauteur"), H])),
-                                dbc.Col(html.P([html.Label("rayon"), R]))
+                                dbc.Col(html.P([html.Label("hauteur"), h])),
+                                dbc.Col(html.Div(id='slider-cylindre', children=[html.P([html.Label("rayon"), r])], style= {'display': 'block'})),
+                                html.Div(id='slider-rectangle', children=[dbc.Row([dbc.Col(html.P([html.Label("longueur"), longueur])), dbc.Col(html.P([html.Label("theta"), theta])), dbc.Col(html.P([html.Label("largeur"), largeur]))])], style= {'display': 'none'}), 
                                 ]),
                         dbc.Row([
                             html.Label("Position finale"),
@@ -161,7 +187,17 @@ layout = dbc.Container(
      ], fluid=True, className="dbc"
 )                   
 
-
+# @callback(
+#     Output('slider-cylindre', 'display'),
+#     Output('slider-rectangle', 'display'),
+#     Input('choice_shape', 'value')
+# )
+# def update_choice_shape(choice_shape):
+#     shapes.update_shape_type(choice_shape)
+#     if choice_shape=='Cylindre':
+#         return 'block', 'none'
+#     else:
+#         return 'none', 'block'
 
 @callback(
     Output("form_exo", "is_open"),
@@ -211,8 +247,13 @@ def save_exo(b_form_ex, b_valid, b_ann, nom_value, admis_exo, admis_carte, admis
     Output('Ex', 'value'),
     Output('Ey', 'value'),
     Output('Ez', 'value'),
-    Output('R', 'value'),
-    Output('H', 'value'),
+    Output('r', 'value'),
+    Output('h', 'value'),
+    Output('theta', 'value'),
+    Output('longueur', 'value'),
+    Output('largeur', 'value'),
+    Output('slider-cylindre', 'style'),
+    Output('slider-rectangle', 'style'),
     Input('reset', 'n_clicks'),
     Input('sauve_piece', 'n_clicks'),
     Input('Bx', 'value'),
@@ -221,28 +262,45 @@ def save_exo(b_form_ex, b_valid, b_ann, nom_value, admis_exo, admis_carte, admis
     Input('Ex', 'value'),
     Input('Ey', 'value'),
     Input('Ez', 'value'),
-    Input('R', 'value'),
-    Input('H', 'value'),
+    Input('r', 'value'),
+    Input('h', 'value'),
+    Input('theta', 'value'),
+    Input('longueur', 'value'),
+    Input('largeur', 'value'),
     Input('admis', 'value'),
-    State('storage_exo', 'data')
+    Input('choice_shape', 'value'),
+    State('storage_exo', 'data'),
+    State('slider-cylindre', 'style'),
+    State('slider-rectangle', 'style'),
 )
-def update_store_button(b_reset, b_sauve, bx, by, bz, ex, ey, ez, rayon, hauteur, check_admis, data):
+def update_store_button(b_reset, b_sauve, bx, by, bz, ex, ey, ez, rayon, hauteur, theta, longueur, largeur, check_admis, choice_shape, data, disp_cylindre, disp_rectangle):
+    if choice_shape != shapes.shape_type:
+        shapes.update_shape_type(choice_shape)
+        if choice_shape=='Cylindre':
+            disp_cylindre, disp_rectangle = {'display': 'block'}, {'display': 'none'}
+        else:
+            disp_cylindre, disp_rectangle =  {'display': 'none'}, {'display': 'block'}
+    
     ctx = dash.callback_context
     if not ctx.triggered:
         button_id = "not pressed yet"
     else:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    shapes.update_shape(shapes.vars2dic(bx, by, bz, ex, ey, ez, rayon, hauteur))
-
+    shapes.update_shape(shapes.vars2dic(bx, by, bz, ex, ey, ez, rayon, hauteur, theta, longueur, largeur))
+    
     if button_id == "reset":
         shapes.save = []
         data = []
     elif button_id == "sauve_piece":
         shapes.save_pose()
         data += shapes.draw_current_shapes()
-        shapes.update_shape(shapes.default_params)
-        bx, by, bz, ex, ey, ez, rayon, hauteur = shapes.dic2vars(shapes.default_params)
+        shapes.update_shape(shapes.shape.default_params)
+        if shapes.shape_type == 'Cylindre':
+            bx, by, bz, ex, ey, ez, rayon, hauteur = shapes.shape.dic2vars(shapes.shape.default_params)
+        elif shapes.shape_type == 'Rectangle':
+            bx, by, bz, ex, ey, ez, theta, longueur, largeur, hauteur = shapes.shape.dic2vars(shapes.shape.default_params)
+
     data_current = shapes.draw_current_shapes()
 
     
@@ -259,7 +317,7 @@ def update_store_button(b_reset, b_sauve, bx, by, bz, ex, ey, ez, rayon, hauteur
     if check_admis==['show']:
         data_current = data_current + [shapes.show_points_admissibles(ls_pointsout_admis)]
         data_current = data_current + [shapes.show_points_admissibles(ls_pointsin_admis, color='orange')]
-    return data, data_current, bx, by, bz, ex, ey, ez, rayon, hauteur
+    return data, data_current, bx, by, bz, ex, ey, ez, rayon, hauteur, theta, longueur, largeur, disp_cylindre, disp_rectangle
 
 
 

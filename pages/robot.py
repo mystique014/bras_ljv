@@ -11,11 +11,7 @@ import time
 
 from pages.utils import *
 
-def dcos(a):
-    return np.cos(np.deg2rad(a))
 
-def dsin(a):
-    return np.sin(np.deg2rad(a))
 
 class Robot:
     def __init__(self, input=None, scale=1, reel_actif=True):

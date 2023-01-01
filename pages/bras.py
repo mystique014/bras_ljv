@@ -356,7 +356,7 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
                 data_playing += shape_playing.draw_current_shapes()
             else:
                 shape_playing.update_shape(el)
-                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P)
+                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])
         
                     
             

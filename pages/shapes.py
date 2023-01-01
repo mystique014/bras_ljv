@@ -8,6 +8,9 @@
 import numpy as np
 import plotly.graph_objects as go
 
+from pages.utils import *
+
+
 
 class Cylindre():
     def __init__(self):
@@ -70,20 +73,13 @@ class Cylindre():
         
         return [cyl, bcircles]
     
-    def update_shape(self, input):
-        for key,val in input.items():
-            setattr(self,key,val)
             
     def draw_current_shapes(self, color_begin='blue', color_end='orange'):
         data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
         data_current += self.draw_shape(self.r, self.h, np.array([self.bx, self.by, self.bz]), color=color_begin)
         return data_current
     
-    
-    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
-        data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
-        data_current += self.draw_shape(self.r, self.h, np.array([self.bx, self.by, self.bz]), color=color_begin)
-        return data_current    
+
     
     def draw_current_tracked_shape(self, extreme_point, P, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
@@ -121,27 +117,107 @@ class Cylindre():
         return data_current
 
 
-    def shape_catched(self, point, dir_bras, tol=10, tol_vertical=0.1):
-        current_point = np.array([self.bx, self.by, self.bz+self.h])
-        dir_bras /= np.linalg.norm(dir_bras)
-        if np.linalg.norm(current_point-point)<=tol and dir_bras[2]>1-tol_vertical:
-            return True
-        else:
-            return False
-        
-#class Rectangle():
 
-class Shapes(Cylindre):
+class Rectangle():
     def __init__(self):
-        super().__init__()
+        self.default_params = {'bx':0, 'by':10, 'bz':10, 'ex': -10, 'ey':-10, 'ez':-10, 'theta':0, 'longueur':10, 'largeur':10, 'h':10}
+        for key,val in self.default_params.items():
+            setattr(self,key,val)
+
+    def dic2vars(self, input):
+        return input['bx'], input['by'], input['bz'], input['ex'], input['ey'], input['ez'], input['theta'], input['longueur'], input['largeur'], input['h']
+    
+            
+    def draw_shape(self, theta, longueur, largeur, h, a, color='blue', scale_opacity=1):
+        """
+        parametrize the cylinder of radius r, height h, base point a
+        """
+        corners = np.zeros((8, 3))
+        count = 0
+        for i in [-1,1]: #x
+            for j in [-1,1]: #y
+                for k in [0,1]: #z
+                    corners[count,0] =  i*(longueur/2)
+                    corners[count,1] = j*(largeur/2)
+                    corners[count,2] = k*h
+                    count += 1
+                    
+        R = np.zeros((3,3))
+        R[2,2] = 1
+        R[0,0] = np.cos(np.deg2rad(theta))
+        R[1,0] = np.sin(np.deg2rad(theta))
+        R[0,1] = -np.sin(np.deg2rad(theta))
+        R[1,1] = np.cos(np.deg2rad(theta))
+        
+        corners = (R@corners.T).T
+        for i in range(3):
+            corners[:,i] += a[i]*np.ones(8)
+        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], alphahull = 0, color=color, opacity=0.55*scale_opacity)]
+        
+    
+            
+    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
+        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
+        data_current += self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.bx, self.by, self.bz]), color=color_begin)
+        return data_current
+    
+
+    
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
+        # P: matrice de changement de base de la base cartésienne à la base souhaitée
+        
+        extreme_point = extreme_point-self.h*P[:,2]
+        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
+        
+        corners = np.zeros((8, 3))
+        count = 0
+        for i in [-1,1]: #x
+            for j in [-1,1]: #y
+                for k in [0,1]: #z
+                    corners[count,0] = i*(self.longueur/2)
+                    corners[count,1] =  j*(self.largeur/2)
+                    corners[count,2] =  k*self.h
+                    count += 1
+                    
+        R = np.zeros((3,3))
+        R[2,2] = 1
+        R[0,0] = np.cos(np.deg2rad(self.theta-pince))
+        R[1,0] = np.sin(np.deg2rad(self.theta-pince))
+        R[0,1] = -np.sin(np.deg2rad(self.theta-pince))
+        R[1,1] = np.cos(np.deg2rad(self.theta-pince))
+        cornersT = (R@corners.T)
+        
+        res = P @ cornersT + np.tile(extreme_point.reshape(3,1), (1,8))
+        
+        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], alphahull = 0, color=color_begin))
+        return data_current
+        
+
+
+
+
+class Shapes():
+    def __init__(self, shape_type='Cylindre'):
         self.save = []
+        self.available_shapes = {'Cylindre':['r'], 'Rectangle':['longueur', 'largeur']}#, 'Obstacle':['longueur', 'largeur']}
+        self.update_shape_type(shape_type)
+        
+    def vars2dic(self,  bx, by, bz, ex, ey, ez, rayon, hauteur, theta, longueur, largeur):
+        return {'bx':bx, 'by':by, 'bz':bz, 'ex': ex, 'ey':ey, 'ez':ez, 'r':rayon, 'h':hauteur,  'theta': theta, 'largeur':largeur, 'longueur':longueur}
+    
+
+    def update_shape_type(self, shape_type):
+        self.shape_type = shape_type
+        if shape_type == 'Cylindre':
+            self.shape = Cylindre()
+        else:
+            self.shape = Rectangle()
         
     def save_pose(self):
-        self.save.append({'bx': self.bx, 'by': self.by, 'bz': self.bz,
-                          'ex': self.ex, 'ey': self.ey, 'ez': self.ez,
-                          'r': self.r, 'h': self.h })
-        
-        
+        dic =  {'shape_type': self.shape_type}
+        dic.update({key:getattr(self.shape,key) for key in list(self.shape.default_params.keys())})
+        self.save.append(dic)
+
     def show_point(self, sx, sy, sz, label, color='blue', symbol_marker='circle'):
         return go.Scatter3d(x=[sx], y=[sy], z=[sz], name=label, mode='markers',
                 marker=dict(
@@ -150,7 +226,14 @@ class Shapes(Cylindre):
                     symbol=symbol_marker
                 ), showlegend=True)
     
-    
+    def shape_catched(self, point, dir_bras, tol=10, tol_vertical=0.1):
+        current_point = np.array([self.shape.bx, self.shape.by, self.shape.bz+self.shape.h])
+        dir_bras /= np.linalg.norm(dir_bras)
+        if np.linalg.norm(current_point-point)<=tol and dir_bras[2]>1-tol_vertical:
+            return True
+        else:
+            return False
+
     def show_points_admissibles(self, ls, color='blue'):
         return go.Mesh3d(x=ls[:, 0], 
                                 y=ls[:, 1], 
@@ -158,4 +241,26 @@ class Shapes(Cylindre):
                                 color="blue", 
                                 opacity=0.1,
                                 alphahull=0)
+    def update_shape(self, input):
+        try:
+            if input['shape_type']!=self.shape_type:
+                self.update_shape_type(input['shape_type'])
+        except:
+            pass
+        for key in list(self.shape.default_params.keys()):
+            setattr(self.shape,key,input[key])
+            
+            
+           
+    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
+        return self.shape.draw_current_shapes(color_begin=color_begin, color_end=color_end)
+
     
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
+        # P: matrice de changement de base de la base cartésienne à la base souhaitée
+        if self.shape_type=='Rectangle':
+            return self.shape.draw_current_tracked_shape(extreme_point, P, pince=pince, color_begin=color_begin, color_end=color_end)
+        else:
+            return self.shape.draw_current_tracked_shape(extreme_point, P, color_begin=color_begin, color_end=color_end)
+
+        
