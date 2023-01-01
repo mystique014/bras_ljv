@@ -1,5 +1,4 @@
 numpy
 scipy
 dash
-Gunicorn
 dash_bootstrap_components
