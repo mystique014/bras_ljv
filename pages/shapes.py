@@ -101,9 +101,9 @@ class Cylindre():
                          colorscale=colorscale,
                          opacity=0.5)
     
-        xb_low, yb_low, zb_low = self.boundary_circle(self.r, self.h, np.zeros(3))
+        xb_low, yb_low, zb_low = self.boundary_circle(self.r, self.h, np.array([0,0,-self.h]))
         reslow = P @ np.vstack((xb_low,yb_low,zb_low)) + np.tile(extreme_point.reshape(3,1), (1,len(xb_low)))
-        xb_up, yb_up, zb_up = self.boundary_circle(self.r, self.h, np.array([0,0,self.h]))
+        xb_up, yb_up, zb_up = self.boundary_circle(self.r, self.h, np.zeros(3))
         resup = P @ np.vstack((xb_up,yb_up,zb_up)) + np.tile(extreme_point.reshape(3,1), (1,len(xb_up)))
 
         bcircles = go.Scatter3d(x = reslow[0,:].tolist()+[None]+resup[0,:].tolist(),
@@ -297,6 +297,7 @@ class Shapes():
     def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
         if self.shape_type=='Rectangle':
+            # if the shape is a rectangle, we take into account the value of the 'pince' in order to ajust the orientation of the shape
             return self.shape.draw_current_tracked_shape(extreme_point, P, pince=pince, color_begin=color_begin, color_end=color_end)
         else:
             return self.shape.draw_current_tracked_shape(extreme_point, P, color_begin=color_begin, color_end=color_end)

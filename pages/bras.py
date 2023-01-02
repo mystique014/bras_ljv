@@ -193,11 +193,11 @@ def update_after_refresh(page_refresh):
         nbPCAservo = 16
         pca = ServoKit(channels=nbPCAservo)
         robot.init_robot_reel(robot.pose(), pca)
-        return False
+        return False, list_exos
     except:
         robot = Robot(reel_actif=False)
         pca = None
-        return False
+        return False, list_exos
 
 
 @callback(
@@ -225,10 +225,16 @@ def update_robot_reel(robot_reel):
     Output('Rx', 'disabled'),
     Output('Ry', 'disabled'),
     Output('Rz', 'disabled'),
+    Output('choice_exo', 'options'),
     Input('choice_exo', 'value')
 )
 
 def update_param_exo(name_exo):
+    list_exos = []
+    for file in os.listdir("./exercices"):
+        if file.endswith(".pkl"):
+            list_exos.append(file[:-4])
+            
     data = []
     exo = pickle.load(open('./exercices/'+name_exo+'.pkl', "rb"))
     for el in exo['shapes']:
@@ -246,7 +252,7 @@ def update_param_exo(name_exo):
     else:
         carte = False
         robot.show_point = False
-    return data, disp, val_admis, not(carte), not(carte), not(carte), not(carte)
+    return data, disp, val_admis, not(carte), not(carte), not(carte), not(carte), list_exos
 
 
 
@@ -343,21 +349,28 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
                     shape_playing.update_shape(el)
                     if shape_playing.shape_catched(extreme_point, P[:,2]):
                         robot.id_tracked_shape = id_shape
+                        if shape_playing.shape_type == 'Rectangle':
+                            robot.ls_shapes_playing[id_shape]['theta'] -= (90+mean_pose['pivot'])
             elif not(robot.save[robot.idx_playing+1]['pompe']):
                 if not(robot.id_tracked_shape is None):
                     robot.ls_shapes_playing[robot.id_tracked_shape]['bx'] = extreme_point[0]
                     robot.ls_shapes_playing[robot.id_tracked_shape]['by'] = extreme_point[1]
                     robot.ls_shapes_playing[robot.id_tracked_shape]['bz'] = extreme_point[2]-robot.ls_shapes_playing[robot.id_tracked_shape]['h']
+                    robot.ls_shapes_playing[robot.id_tracked_shape]['pince'] = mean_pose['pince']
+                    robot.ls_shapes_playing[robot.id_tracked_shape]['P'] = P
+                    robot.ls_shapes_playing[robot.id_tracked_shape]['extreme_point'] = extreme_point
                 robot.id_tracked_shape = None
             
         for id_shape, el in enumerate(robot.ls_shapes_playing):
+            shape_playing.update_shape(el)            
             if id_shape != robot.id_tracked_shape:
-                shape_playing.update_shape(el)
-                data_playing += shape_playing.draw_current_shapes()
+                if 'P' in list(el.keys()):
+                    data_playing += shape_playing.draw_current_tracked_shape(el['extreme_point'], el['P'], pince=el['pince'])
+                else:
+                    data_playing += shape_playing.draw_current_shapes()
             else:
                 shape_playing.update_shape(el)
-                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])
-        
+                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])             
                     
             
         if robot.frame == robot.maxframe+1:
