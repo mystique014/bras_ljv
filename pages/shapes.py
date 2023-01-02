@@ -116,6 +116,23 @@ class Cylindre():
         data_current += [cyl, bcircles]
         return data_current
 
+    def save_excel_file(self, worksheet, count, shape_dic):
+        worksheet.write('A1', 'x initial')
+        worksheet.write('A'+str(count), shape_dic['bx'])
+        worksheet.write('B1', 'y initial')
+        worksheet.write('B'+str(count), shape_dic['by'])
+        worksheet.write('C1', 'z initial')
+        worksheet.write('C'+str(count), shape_dic['bz'])
+        worksheet.write('D1', 'x final')
+        worksheet.write('D'+str(count), shape_dic['ex'])
+        worksheet.write('E1', 'y final')
+        worksheet.write('E'+str(count), shape_dic['ey'])
+        worksheet.write('F1', 'z final')
+        worksheet.write('F'+str(count), shape_dic['ez'])
+        worksheet.write('G1', 'hauteur')
+        worksheet.write('G'+str(count), shape_dic['h'])
+        worksheet.write('H1', 'rayon')
+        worksheet.write('H'+str(count), shape_dic['r'])
 
 
 class Rectangle():
@@ -192,7 +209,28 @@ class Rectangle():
         data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], alphahull = 0, color=color_begin))
         return data_current
         
-
+    def save_excel_file(self, worksheet, count, shape_dic):
+        worksheet.write('A1', 'x initial')
+        worksheet.write('A'+str(count), shape_dic['bx'])
+        worksheet.write('B1', 'y initial')
+        worksheet.write('B'+str(count), shape_dic['by'])
+        worksheet.write('C1', 'z initial')
+        worksheet.write('C'+str(count), shape_dic['bz'])
+        worksheet.write('D1', 'x final')
+        worksheet.write('D'+str(count), shape_dic['ex'])
+        worksheet.write('E1', 'y final')
+        worksheet.write('E'+str(count), shape_dic['ey'])
+        worksheet.write('F1', 'z final')
+        worksheet.write('F'+str(count), shape_dic['ez'])
+        worksheet.write('G1', 'hauteur')
+        worksheet.write('G'+str(count), shape_dic['h'])
+        worksheet.write('H1', 'theta')
+        worksheet.write('H'+str(count), shape_dic['theta'])
+        worksheet.write('I1', 'longueur')
+        worksheet.write('I'+str(count), shape_dic['longueur'])
+        worksheet.write('J1', 'largeur')
+        worksheet.write('J'+str(count), shape_dic['largeur'])
+        
 
 
 
@@ -264,3 +302,40 @@ class Shapes():
             return self.shape.draw_current_tracked_shape(extreme_point, P, color_begin=color_begin, color_end=color_end)
 
         
+    def save_excel_file(self, name_exo, admis_carte, admis_exo, admis_coord):
+        import xlsxwriter
+         
+        # Workbook() takes one, non-optional, argument
+        # which is the filename that we want to create.
+        workbook = xlsxwriter.Workbook('./exercices/'+name_exo+'.xlsx')
+         
+        # The workbook object is then used to add new
+        # worksheet via the add_worksheet() method.
+        worksheet = workbook.add_worksheet('Parametres')
+        
+        worksheet.write('A1', 'Utilisation des coordonnées cartésiennes autorisée')
+        worksheet.write('A2', str(admis_carte==['show']))
+
+        worksheet.write('C1', "Possibilité d'afficher les points admissibles dans l'exercice")
+        worksheet.write('C2', str(admis_exo==['show']))
+        
+        worksheet.write('B1', 'Lecture possible des coordonnées cartésiennes sur la figure 3D')
+        worksheet.write('B2', str(admis_coord==['show']))
+        
+        worksheet_cylindres = workbook.add_worksheet('Cylindres')
+        worksheet_rectangles = workbook.add_worksheet('Rectangles')
+        
+        count_cylindres = 2
+        count_rectangles = 2
+        for shape_dic in self.save:
+            self.update_shape(shape_dic)
+            if shape_dic['shape_type'] == 'Cylindre':
+                self.shape.save_excel_file(worksheet_cylindres, count_cylindres, shape_dic)
+                count_cylindres += 1
+            elif shape_dic['shape_type'] == 'Rectangle':
+                self.shape.save_excel_file(worksheet_rectangles, count_rectangles, shape_dic)
+                count_rectangles += 1
+         
+        # Finally, close the Excel file
+        # via the close() method.
+        workbook.close()

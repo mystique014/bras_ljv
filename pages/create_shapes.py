@@ -229,6 +229,7 @@ def save_exo(b_form_ex, b_valid, b_ann, nom_value, admis_exo, admis_carte, admis
         pickle.dump(exo,f)
         # close file
         f.close()
+        shapes.save_excel_file(nom_value, admis_carte, admis_exo, admis_coord)
         return False
     elif button_id == "annuler_form_exo":
         return False
