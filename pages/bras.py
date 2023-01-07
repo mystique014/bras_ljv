@@ -52,7 +52,6 @@ ls_pointsin_admis = pointsin[ConvexHull(pointsin).vertices]
 ls_pointsout_admis = pointsout[ConvexHull(pointsout).vertices]
 delaunayin = Delaunay(ls_pointsin_admis)
 delaunayout = Delaunay(ls_pointsout_admis)
-ls_points_admis = np.concatenate((ls_pointsin_admis,ls_pointsout_admis), axis=0)
 
 
 # Step 3. Create a plotly figure
@@ -84,6 +83,9 @@ Storage_shapes = dcc.Store(
 Storage_playing = dcc.Store(
         id='storage_playing',
         data=[])
+Storage_title = dcc.Store(
+        id='title',
+        data='')
 
 
 
@@ -103,7 +105,7 @@ Choice_exo = dcc.Dropdown(
 )
 
 Interval = dcc.Interval(id='graph-refresher',
-                     interval=1*400,
+                     interval=1*600,
                      n_intervals=0,
                      max_intervals=50,
                      disabled=True)
@@ -157,7 +159,7 @@ layout = dbc.Container(
               dbc.Col(html.P([html.Label("Choix d'un exercice: "), Choice_exo]))
               ]),
      html.Div([admis], style= {'display': 'block'}), ghost, Sauve_auto, Robot_reel,
-     Storage_shapes,Storage,Interval,Storage_playing,
+     Storage_shapes,Storage,Interval,Storage_playing,Storage_title,
      dbc.Row([dbc.Col(dcc.Graph(id = 'plot', figure = fig)),
               dbc.Col([dbc.Row([
                                 dbc.Col(html.P([html.Label("Pompe"), pompe_switch])),
@@ -298,6 +300,7 @@ def update_store_interval(b_path, nom_exo):
     Output('Rx', 'value'),
     Output('Ry', 'value'),
     Output('Rz', 'value'),
+    Output('title', 'data'),
     Input('graph-refresher','n_intervals'),
     Input('reset', 'n_clicks'),
     Input('init', 'n_clicks'),
@@ -316,9 +319,11 @@ def update_store_interval(b_path, nom_exo):
     Input('admis', 'value'),
     Input('pompe', 'value'),
     Input('page_refresh', 'data'),
-    State('choice_exo', 'value')
+    State('choice_exo', 'value'),
+    State('title', 'data')
 )
-def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv, input1, input2, input3, input_pince, rx, ry, rz, check_ghost, check_sauve_auto, check_admis, pompe_val, page_refresh, nom_exo):
+def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv, comple_input1, input2, input3, input_pince, rx, ry, rz, check_ghost, check_sauve_auto, check_admis, pompe_val, page_refresh, nom_exo, title):
+    input1 = 180-comple_input1
     ctx = dash.callback_context
     if not ctx.triggered:
         button_id = "not pressed yet"
@@ -334,6 +339,7 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
         hidden_sauve = False
     slider_carte_moved = (robot.extreme_point != np.array([rx,ry,rz])).any()
     
+    
     pose = {'pivot': input_piv, 'bras1': input1, 'bras2': input2, 'bras3': input3, 'pince': input_pince, 'pompe':pompe_val}
     if robot.is_playing:
             
@@ -342,6 +348,11 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
         if robot.frame == 0:
             robot.update_structure_reel(robot.save[robot.idx_playing+1].copy(), pca)
         robot.frame += 1
+        
+        if not(robot.id_tracked_shape is None):
+            if robot.conflict(extreme_point, P, mean_pose['pince']):
+                title = 'Scénario incorrect: des pièces se percutent'
+
         if robot.pompe_is_changed():
             robot.frame = robot.maxframe+1
             if (robot.id_tracked_shape is None) and robot.save[robot.idx_playing+1]['pompe']:
@@ -350,15 +361,24 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
                     if shape_playing.shape_catched(extreme_point, P[:,2]):
                         robot.id_tracked_shape = id_shape
                         if shape_playing.shape_type == 'Rectangle':
-                            robot.ls_shapes_playing[id_shape]['theta'] -= (90+mean_pose['pivot'])
+                            robot.ls_shapes_playing[id_shape]['theta'] -= (90+mean_pose['pivot'])-mean_pose['pince']
             elif not(robot.save[robot.idx_playing+1]['pompe']):
                 if not(robot.id_tracked_shape is None):
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['bx'] = extreme_point[0]
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['by'] = extreme_point[1]
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['bz'] = extreme_point[2]-robot.ls_shapes_playing[robot.id_tracked_shape]['h']
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['pince'] = mean_pose['pince']
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['P'] = P
-                    robot.ls_shapes_playing[robot.id_tracked_shape]['extreme_point'] = extreme_point
+                    if robot.correct_release(P[:,2]):
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['bx'] = extreme_point[0]
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['by'] = extreme_point[1]
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['bz'] = extreme_point[2]-robot.ls_shapes_playing[robot.id_tracked_shape]['h']
+                        
+                        if robot.ls_shapes_playing[robot.id_tracked_shape]['shape_type'] == 'Rectangle':
+                            robot.ls_shapes_playing[robot.id_tracked_shape]['theta'] += (90+mean_pose['pivot'])-mean_pose['pince']
+                    else:
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['bx'] = extreme_point[0]
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['by'] = extreme_point[1]
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['bz'] = extreme_point[2]-robot.ls_shapes_playing[robot.id_tracked_shape]['h']
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['pince'] = mean_pose['pince']
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['P'] = P
+                        robot.ls_shapes_playing[robot.id_tracked_shape]['extreme_point'] = extreme_point
+                        title = 'Scénario incorrect: pièce lachée non verticalement'
                 robot.id_tracked_shape = None
             
         for id_shape, el in enumerate(robot.ls_shapes_playing):
@@ -370,9 +390,8 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
                     data_playing += shape_playing.draw_current_shapes()
             else:
                 shape_playing.update_shape(el)
-                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])             
-                    
-            
+                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])  
+
         if robot.frame == robot.maxframe+1:
             robot.idx_playing += 1
             robot.frame = 0
@@ -387,10 +406,12 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
             robot.ghost_pose = {}
             robot.update_structure(pose)
             robot.update_structure_reel(pose, pca)
+            title = ''
         elif button_id == 'init' or robot.first_callback:
             robot.first_callback = False
             robot.update_structure(robot.DEFAULT_PARAMS.copy())
             robot.update_structure_reel(robot.pose(), pca)
+            pose = robot.pose().copy()
             robot.extreme_point = robot.default_extreme_point
             input_piv, input1, input2, input3, input_pince, pompe_val = robot.dic2vars(robot.pose())
         elif button_id == "valide_carte":
@@ -426,8 +447,9 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
         data += [robot.show_point_end(rx, ry, rz, color=robot.color_arrivee)]
         if check_admis==['show']:
             data = data + [robot.show_points_admissibles(ls_pointsout_admis)]
-            data = data + [robot.show_points_admissibles(ls_pointsin_admis, color='orange')]
-    return data, data_playing, hidden_sauve, input_piv, input1, input2, input3, input_pince, pompe_val, rx, ry, rz
+            data = data + [robot.show_points_admissibles(ls_pointsin_admis, opacity= 0.1, color='red')]
+
+    return data, data_playing, hidden_sauve, input_piv, 180-input1, input2, input3, input_pince, pompe_val, rx, ry, rz, title
 
 
 
@@ -435,8 +457,8 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
 
 clientside_callback(
     """
-    function(n_interval, data, data_shapes, data_playing) {
-        if (data_playing.length === 0) {
+    function(n_interval, data, data_shapes, data_playing, title) {
+        if (data_playing.length == 0) {
                data_plot = data.concat(data_shapes)
         }
         else {
@@ -444,7 +466,8 @@ clientside_callback(
         }
         return {
             'data': data_plot,
-            'layout' : {'scene_aspectmode': 'cube',
+            'layout' : {
+                        'title': {'text': title, 'font': {'size': 40, 'color': 'red'}},
                         'width': 1000,
                         'height': 1000,
                         'scene': {
@@ -469,7 +492,8 @@ clientside_callback(
     Input('graph-refresher','n_intervals'),
     Input('storage', 'data'),
     Input('storage_shapes', 'data'),
-    Input('storage_playing', 'data')
+    Input('storage_playing', 'data'),
+    Input('title', 'data')
     )
 
 

@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 import time
 
 from pages.utils import *
+from pulp import *
 
 
 
@@ -42,13 +43,13 @@ class Robot:
         self.id_tracked_shape = None
         self.ls_shapes_playing = []
         
-        
-    def show_points_admissibles(self, ls, color='blue'):
+
+    def show_points_admissibles(self, ls, opacity=0.1, color='blue'):
         return go.Mesh3d(x=ls[:, 0], 
                                 y=ls[:, 1], 
                                 z=ls[:, 2], 
-                                color="blue", 
-                                opacity=0.1,
+                                color=color, 
+                                opacity=opacity,
                                 alphahull=0)
    
     def show_point_end(self, sx, sy, sz, color='blue'):
@@ -305,7 +306,7 @@ class Robot:
         
     def init_robot_reel(self, input, pca):
         if self.reel_actif:
-            piv, b1, b2, b3, pince = self.dic2vars(input)
+            piv, b1, b2, b3, pince, pompe = self.dic2vars(input)
             pca.servo[0].angle = piv
             pca.servo[1].angle = b1
             pca.servo[3].angle = b2
@@ -315,12 +316,146 @@ class Robot:
         
     def update_structure_reel(self, input, pca):
         if self.reel_actif:
-            key_move = ''
-            for key in input.keys():
-                if input[key]!=self.reel_pose[key]:
-                    key_move = key
-            if key_move!='':
-                pca.servo[key2channel[key_move]].angle = input[key_move]
+            try:
+                for key in input.keys():
+                    if input[key]!=self.reel_pose[key] and key!='pompe':
+                        pca.servo[key2channel[key]].angle = input[key]
                 self.reel_pose = input.copy()
+            except:
+                self.init_robot_reel(input, pca)
 
+    def correct_release(self, direction):
+        if corr(direction, np.array([0,0,1]))>=0.95:
+            return True
+        else:
+            return False
+
+    def conflict(self, extreme_point, P, pince):
         
+        conflict = False
+        eltracked = self.ls_shapes_playing[self.id_tracked_shape]
+        if 'theta' in eltracked.keys():
+            theta = eltracked['theta']
+
+            L = eltracked['longueur']
+            l = eltracked['largeur']
+
+        else:
+            theta = 0
+            L = 2*eltracked['r']
+            l = 2*eltracked['r']
+
+        Rinv = np.zeros((3,3))
+        Rinv[2,2] = 1
+        Rinv[0,0] = np.cos(np.deg2rad(theta-pince))
+        Rinv[1,0] = -np.sin(np.deg2rad(theta-pince))
+        Rinv[0,1] = np.sin(np.deg2rad(theta-pince))
+        Rinv[1,1] = np.cos(np.deg2rad(theta-pince))
+        Q = Rinv @ np.linalg.inv(P)
+        Abase = -Q
+        bbase = -Q @ extreme_point + np.array([L/2, l/2, eltracked['h']])
+        Abase = np.vstack((Abase,Q))
+        bbase = np.hstack((bbase,Q @ extreme_point + np.array([L/2, l/2, 0])))
+        for id_shape, el in enumerate(self.ls_shapes_playing):
+            if id_shape != self.id_tracked_shape:
+                A = np.copy(Abase)
+                b = np.copy(bbase)
+                if not('P' in el.keys()):
+                    if el['shape_type'] =='Cylindre':
+                        theta=0
+                        L = 2*el['r']
+                        l = 2*el['r']
+                    elif not('P' in el.keys()):
+                        theta = el['theta']
+                        L = el['longueur']
+                        l = el['largeur']
+                    center = np.array([el['bx'], el['by'], el['bz']])
+                    Q = np.array([[dcos(theta), dsin(theta), 0],[-dsin(theta),dcos(theta), 0], [0,0,1]])
+                    A = np.vstack((A,Q,-Q))
+                    b = np.hstack((b, Q @ center + np.array([L/2,  l/2, el['h']]),-Q @ center + np.array([L/2, l/2, 0])))
+                else:
+                    Q = np.linalg.inv(el['P'])
+                    center = el['extreme_point']
+                    A = np.vstack((A,Q,-Q))
+                    b = np.hstack((b,Q @ center + np.array([L/2, l/2, 0]),-Q @ center + np.array([L/2, l/2, el['h']])))
+
+                set_D = range(0, A.shape[0])
+                set_I = range(0, A.shape[1])
+    
+                prob = LpProblem("intersection", LpMinimize)
+                V = pulp.LpVariable.dicts("V", [0,1,2], cat='Continuous')
+
+                # Make up an objective, let's say sum of V_i
+                prob += lpSum([V[i] for i in set_I])
+                prob += V[0] >= -200
+                prob += V[1] >= -200
+                prob += V[2] >= -30
+                prob += 200 >= V[0]
+                prob += 200 >= V[1]
+                prob += 200 >= V[2]
+                # Apply constraints
+                for d in set_D:
+                        prob += b[d] - lpSum([A[d][i]*V[i] for i in set_I]) >= 0
+
+                # Solve problem
+                prob.solve()
+
+                conflict = conflict or (LpStatus[prob.status]=='Optimal')
+        return conflict
+
+
+# # Generate proble, & Create variables
+
+
+#     def conflict(self, extreme_point, P, pince):
+
+#         conflict = False
+#         eltracked = self.ls_shapes_playing[self.id_tracked_shape]
+#         if 'theta' in eltracked.keys():
+#             theta = eltracked['theta']
+
+#             L = eltracked['longueur']
+#             l = eltracked['largeur']
+
+#         else:
+#             theta = 0
+#             L = 2*eltracked['r']
+#             l = 2*eltracked['r']
+
+#         Rinv = np.zeros((3,3))
+#         Rinv[2,2] = 1
+#         Rinv[0,0] = np.cos(np.deg2rad(theta-pince))
+#         Rinv[1,0] = -np.sin(np.deg2rad(theta-pince))
+#         Rinv[0,1] = np.sin(np.deg2rad(theta-pince))
+#         Rinv[1,1] = np.cos(np.deg2rad(theta-pince))
+#         Q = Rinv @ np.linalg.inv(P)
+#         Abase = -Q
+#         bbase = -Q @ extreme_point + np.array([L/2, l/2, eltracked['h']])
+#         Abase = np.vstack((Abase,Q))
+#         bbase = np.hstack((bbase,Q @ extreme_point + np.array([L/2, l/2, 0])))
+#         for id_shape, el in enumerate(self.ls_shapes_playing):
+#             if id_shape != self.id_tracked_shape:
+#                 A = np.copy(Abase)
+#                 b = np.copy(bbase)
+#                 if not('P' in el.keys()):
+#                     if el['shape_type'] =='Cylindre':
+#                         theta=0
+#                         L = 2*el['r']
+#                         l = 2*el['r']
+#                     elif not('P' in el.keys()):
+#                         theta = el['theta']
+#                         L = el['longueur']
+#                         l = el['largeur']
+#                     center = np.array([el['bx'], el['by'], el['bz']])
+#                     Q = np.array([[dcos(theta), dsin(theta), 0],[-dsin(theta),dcos(theta), 0], [0,0,1]])
+#                     A = np.vstack((A,Q,-Q))
+#                     b = np.hstack((b, Q @ center + np.array([L/2,  l/2, el['h']]),-Q @ center + np.array([L/2, l/2, 0])))
+#                 else:
+#                     Q = np.linalg.inv(el['P'])
+#                     center = el['extreme_point']
+#                     A = np.vstack((A,Q,-Q))
+#                     b = np.hstack((b,Q @ center + np.array([L/2, l/2, 0]),-Q @ center + np.array([L/2, l/2, el['h']])))
+
+#                 res = linprog(np.zeros(3), A_ub=A, b_ub=b, bounds = [(-200,200), (-200,200), (-30, 200)], method='interior-point')
+#                 conflict = conflict or res['success']
+#         return conflict

@@ -24,55 +24,31 @@ class Cylindre():
     def dic2vars(self, input):
         return input['bx'], input['by'], input['bz'], input['ex'], input['ey'], input['ez'], input['r'], input['h']
     
-    def cylinder(self, r, h, a, nt=100, nv =50):
-        """
-        parametrize the cylinder of radius r, height h, base point a
-        """
-        theta = np.linspace(0, 2*np.pi, nt)
-        v = np.linspace(a[2], a[2] +h, nv )
-        theta, v = np.meshgrid(theta, v)
-        x = r*np.cos(theta) + a[0]
-        y = r*np.sin(theta) + a[1]
-        z = v
-        return x, y, z
-    
-    def boundary_circle(self, r, h, a, nt=100):
-        """
-        r - boundary circle radius
-        h - height above xOy-plane where the circle is included
-        returns the circle parameterization
-        """
-        theta = np.linspace(0, 2*np.pi, nt)
-        x = r*np.cos(theta) + a[0]
-        y = r*np.sin(theta) + a[1]
-        z = (a[2]+ h)*np.ones(theta.shape)
-        return x, y, z
-            
+
     def draw_shape(self, r, h, a, color='blue', scale_opacity=1):
         """
         parametrize the cylinder of radius r, height h, base point a
         """
-        x, y, z = self.cylinder(r, h, a)
-        
-        colorscale = [[0, color],
-                     [1, color]]
-        
-        cyl = go.Surface(x=x, y=y, z=z,
-                         showscale=False,
-                         colorscale=colorscale,
-                         opacity=0.5*scale_opacity)
-        xb_low, yb_low, zb_low = self.boundary_circle(r, h, a)
-        xb_up, yb_up, zb_up = self.boundary_circle(r, h, a)
-        
-        bcircles = go.Scatter3d(x = xb_low.tolist()+[None]+xb_up.tolist(),
-                                y = yb_low.tolist()+[None]+yb_up.tolist(),
-                                z = zb_low.tolist()+[None]+zb_up.tolist(),
-                                mode ='lines',
-                                line = dict(color=color, width=2),
-                                opacity =0.55*scale_opacity, showlegend=False)
-        
-        return [cyl, bcircles]
-    
+        corners = np.zeros((2*20, 3))
+        count = 0
+        lsthetas = np.linspace(0,2*np.pi, 20)
+        for theta in lsthetas:
+            corners[count,0] = r*np.cos(theta)
+            corners[count,1] = r*np.sin(theta)
+            corners[count,2] = h
+            count += 1
+        for theta in lsthetas:
+            corners[count,0] = r*np.cos(theta)
+            corners[count,1] = r*np.sin(theta)
+            corners[count,2] = 0
+            count += 1
+
+        for i in range(3):
+            corners[:,i] += a[i]*np.ones(40)
+        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], alphahull = 0, color=color, opacity=0.55*scale_opacity)]
+
+
+
             
     def draw_current_shapes(self, color_begin='blue', color_end='orange'):
         data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
@@ -80,41 +56,31 @@ class Cylindre():
         return data_current
     
 
-    
-    def draw_current_tracked_shape(self, extreme_point, P, color_begin='blue', color_end='orange'):
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
-        
+
         extreme_point = extreme_point-self.h*P[:,2]
         data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
-        
-        x, y, z = self.cylinder(self.r, self.h, np.zeros(3))
-        
-        n,m = x.shape
-        res = P @ np.vstack((x.reshape(-1),y.reshape(-1),z.reshape(-1))) + np.tile(extreme_point.reshape(3,1), (1,n*m))
-        
-        
-        colorscale = [[0, color_begin],
-                     [1, color_begin]]
-        
-        cyl = go.Surface(x=res[0,:].reshape(n,m), y=res[1,:].reshape(n,m), z=res[2,:].reshape(n,m),
-                         showscale=False,
-                         colorscale=colorscale,
-                         opacity=0.5)
-    
-        xb_low, yb_low, zb_low = self.boundary_circle(self.r, self.h, np.array([0,0,-self.h]))
-        reslow = P @ np.vstack((xb_low,yb_low,zb_low)) + np.tile(extreme_point.reshape(3,1), (1,len(xb_low)))
-        xb_up, yb_up, zb_up = self.boundary_circle(self.r, self.h, np.zeros(3))
-        resup = P @ np.vstack((xb_up,yb_up,zb_up)) + np.tile(extreme_point.reshape(3,1), (1,len(xb_up)))
 
-        bcircles = go.Scatter3d(x = reslow[0,:].tolist()+[None]+resup[0,:].tolist(),
-                                y = reslow[1,:].tolist()+[None]+resup[1,:].tolist(),
-                                z = reslow[2,:].tolist()+[None]+resup[2,:].tolist(),
-                                mode ='lines',
-                                line = dict(color=color_begin, width=2),
-                                opacity =0.55, showlegend=False)
-           
-        data_current += [cyl, bcircles]
+        corners = np.zeros((2*20, 3))
+        count = 0
+        lsthetas = np.linspace(0, 2*np.pi, 20)
+        for theta in lsthetas:
+            corners[count,0] = self.r*np.cos(theta)
+            corners[count,1] = self.r*np.sin(theta)
+            corners[count,2] = self.h
+            count += 1
+        for theta in lsthetas:
+            corners[count,0] = self.r*np.cos(theta)
+            corners[count,1] = self.r*np.sin(theta)
+            corners[count,2] = 0
+            count += 1
+
+        res = P @ corners.T + np.tile(extreme_point.reshape(3,1), (1,40))
+
+        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], alphahull = 0, color=color_begin))
         return data_current
+
 
     def save_excel_file(self, worksheet, count, shape_dic):
         worksheet.write('A1', 'x initial')
@@ -340,3 +306,7 @@ class Shapes():
         # Finally, close the Excel file
         # via the close() method.
         workbook.close()
+        
+  #  def correct_release(self):
+        
+        
