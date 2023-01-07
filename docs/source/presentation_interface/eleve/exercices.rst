@@ -1,5 +1,5 @@
-Résoudre un exercice
-====================
+Résoudre un exercice et jouer un scénario
+=========================================
 
 Il est possible de charger un exercice préalablement défini via le menu déroulant situé dans le coin supérieur droit de l'interface. En chargeant un exercice, l'utilisateur voit apparaître un environnement pour le robot, i.e. des pièces (cylindres ou rectangles) préalablement définies et qui sont associées à des positions d'arrivée. L'objectif est alors d'utiliser le robot pour emmener chaque pièce à la position d'arrivée qui lui est associée. Cette tâche peut s'avérer plus ou moins complexe suivant les aides auxquelles le créateur de l'exercice à autoriser l'accès. Voir l':doc:`../enseignant/index` pour plus de détails.
 
