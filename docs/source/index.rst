@@ -2,6 +2,46 @@ BRAS ROBOTISE COMMANDE A DISTANCE
 =================================
 
 
+
++------------------+--------------------+---------------+----------------+------------+
+|**Documentation** | **Outil interactif | **Vidéos de   | **Construction | **Maquette |
+|                  | en ligne**         | présentation  | du bras**      | numérique**|
+|                  |                    | du projet**   |                |            |
++==================+====================+===============+================+============+
+| |image0|         | |image1|           | |image2|      | |image3|       | |Modèle    |
+|                  |                    |               |                | OnShape|   |
++------------------+--------------------+---------------+----------------+------------+
+|                  | `Découverte        | `Tutoriels en | `Publication   | `Modèle    |
+|                  | de                 | vidéos        | Eduscol        | OnShape    |
+|                  | l’outil <ht        | <https://     | <https://edus  | <https:    |
+|                  | tps://quent        | www.youtube.c | col.education  | //julesver |
+|                  | induchemin.        | om/channel/UC | .fr/sti/resso  | ne14120.on |
+|                  | pythonanywh        | u_MwXRD5ky9tD | urces_pedagog  | shape.com/ |
+|                  | ere.com>`__        | az5NYaT0w>`__ | iques/support  | documents/ |
+|                  |                    |               | -pour-une-app  | fb4ba6523b |
+|                  |                    |               | roche-fonctio  | e7501f6804 |
+|                  |                    |               | nnelle-de-la-  | 5163/w/285 |
+|                  |                    |               | robotique>`__  | 3b905bb400 |
+|                  |                    |               |                | 04b2178df9 |
+|                  |                    |               |                | 2/e/b93caf |
+|                  |                    |               |                | 2cf3a922b8 |
+|                  |                    |               |                | 7860c5e8?a |
+|                  |                    |               |                | a=true>`__ |
++------------------+--------------------+---------------+----------------+------------+
+
+
+.. |image0| image:: https://img.shields.io/badge/docs-latest%20release-blue.svg
+   :target: https://quentinduchemin.pythonanywhere.com
+.. |image1| image:: ./_static/logos/pyany.jpg
+   :target: https://quentinduchemin.pythonanywhere.com
+.. |image2| image:: ./_static/logos/youtube.png
+   :target: https://www.youtube.com/channel/UCu_MwXRD5ky9tDaz5NYaT0w
+.. |image3| image:: ./_static/logos/eduscol-logo.jpg
+   :target: https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique
+.. |Modèle OnShape| image:: ./_static/logos/onshape.jpg
+   :target: https://julesverne14120.onshape.com/documents/fb4ba6523be7501f68045163/w/2853b905bb40004b2178df92/e/b93caf2cf3a922b87860c5e8?aa=true
+   
+   
 Description du projet
 ---------------------
 
