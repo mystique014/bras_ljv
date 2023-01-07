@@ -5,7 +5,7 @@
 | **Documentation**         | **Outil interactif en ligne**    | **Vidéos de présentation du projet**  | **Construction du bras**            | **Maquette numérique**         |
 |:------------------------- |:-------------------------------- |:------------------------------------- |:------------------------------------|:------------------------------ |
 | [![][docs-img]][online]   | [![][imgonline]][online]       | [![][badge-vid]][videos]          | [![][imgeduscol]][eduscol]     | [![Modèle OnShape][imgonshape]][onshape]     |
-|   | [Découverte de l'outil][online]       | [Tutoriels en vidéos][videos]          | [Publication Eduscol][eduscol]     | [Modèle OnShape][imgonshape]][onshape]     |
+|   | [Découverte de l'outil][online]       | [Tutoriels en vidéos][videos]          | [Publication Eduscol][eduscol]     | [Modèle OnShape][onshape]     |
 
 
 Bras LJV fournit une plateforme interactive permettant de contrôler à distance un bras robot. Bras LJV est implémenté en Python et repose principalement sur l'outil [Dash](https://dash.plotly.com/) qui permet la rapide création d'applications en Python. 
