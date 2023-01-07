@@ -4,7 +4,7 @@
 
 | **Documentation**         | **Outil interactif en ligne**    | **Vidéos de présentation du projet**  | **Construction du bras**            | **Maquette numérique**         |
 |:------------------------- |:-------------------------------- |:------------------------------------- |:------------------------------------|:------------------------------ |
-| [![][docs-img]][online]   | ![][online-bad]][online]         | [![][badge-vid]][videos]              | [![][eduscol]][eduscol]             | [![Modèle OnShape][imgonshape]][onshape]     |
+| [![][docs-img]][online]   | ![][online-bad]](https://quentinduchemin.pythonanywhere.com)        | [![][badge-vid]][videos]              | [![][eduscol]][eduscol]             | [![Modèle OnShape][imgonshape]][onshape]     |
 
 
 
