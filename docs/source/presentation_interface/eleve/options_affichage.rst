@@ -1,10 +1,17 @@
-.. _option-affichage:
-
-
 Options d'affichage
 ===================
 
-L'utilisateur peut activer ou désactiver certaines options de l'interface virtuelle. Il peut modifier quand il le souhaite ces options en cochant ou décochant les *Checkboxes* situées dans le coin supérieur gauche de son écran. Ci-dessous, nous fournissons une description de chaque option:
+L'utilisateur peut activer ou désactiver certaines options de l'interface virtuelle. Il peut modifier quand il le souhaite ces options en cochant ou décochant les *Checkboxes* situées dans le coin supérieur gauche de son écran. La zone rouge marquée par une flèche sur la figure ci-dessous montre la position de ces cases à cocher sur l'interface.
+
+
+.. image:: ../../_static/images/options_affichage.png
+   :width: 1000px
+
+
+
+
+
+Ci-dessous, nous fournissons une description de chaque option:
 
 1. **Montrer les points admissibles**
 
@@ -21,6 +28,12 @@ Quand cette option est cochée, l'interface virtuelle permet la visualisation si
 - la position du robot virtuel avec des traits pleinement opaques,
 
 - la position initiale du robot pour le scénario de mouvements du robot étant en cours de sauvegarde. Autrement dit, cette position initiale du robot correspond à la première position du robot virtuel sauvegardée. Cette position apparaît à l'écran avec des traits moins opaques. Ainsi, quand l'utilisateur appuye sur le bouton **Supprimer sauvegarde**, seul le robot virtuel est visible à l'écran car toutes les positions précédemment enregistrées sont oubliées.
+
+La figure suivante présente un exemple de l'affichage de la position initiale d'un scénario.
+
+
+.. image:: ../../_static/images/ghost.png
+   :width: 700px
 
 
 3. **Sauvegarde automatique des positions**
