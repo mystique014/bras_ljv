@@ -45,7 +45,7 @@ delaunayout = Delaunay(ls_pointsout_admis)
 
 # Step 3. Create a plotly figure
 
-fig = go.Figure()
+fig = go.Figure(layout = { 'uirevision': 'constant'})
 
 robot = Robot(reel_actif=False)
 
@@ -75,7 +75,6 @@ Storage_playing = dcc.Store(
 Storage_title = dcc.Store(
         id='title',
         data='')
-
 
 
 
@@ -189,6 +188,8 @@ def update_after_refresh(page_refresh):
         robot = Robot(reel_actif=False)
         pca = None
         return False, list_exos
+
+
 
 
 @callback(
@@ -444,6 +445,8 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
 
 
 
+
+
 clientside_callback(
     """
     function(n_interval, data, data_shapes, data_playing, title) {
@@ -453,28 +456,30 @@ clientside_callback(
         else {
             data_plot = data.concat(data_playing)
         }
-        return {
-            'data': data_plot,
-            'layout' : {
-                        'title': {'text': title, 'font': {'size': 40, 'color': 'red'}},
-                        'width': 1000,
-                        'height': 1000,
-                        'scene': {
-                                 'xaxis': {
-                                     'nticks': 4,
-                                     'range': [-200, 200],
-                                 },
-                                 'yaxis':{ 'nticks': 4,
-                                     'range': [-200, 200],
-                                 },
-                                 'zaxis': {
-                                     'nticks': 4,
-                                     'range': [-30, 220],
-                                 },
-                                 'aspectratio': {'x':1, 'y':1, 'z':0.95}
-                             }
-                        }
-            }
+        
+        layout = { 'uirevision': 'constant',
+                    'title': {'text': title, 'font': {'size': 40, 'color': 'red'}},
+                    'width': 1000,
+                    'height': 1000,
+                    'scene': {
+                             'xaxis': {
+                                 'nticks': 4,
+                                 'range': [-200, 200],
+                             },
+                             'yaxis':{ 'nticks': 4,
+                                 'range': [-200, 200],
+                             },
+                             'zaxis': {
+                                 'nticks': 4,
+                                 'range': [-30, 220],
+                             },
+                             'aspectratio': {'x':1, 'y':1, 'z':0.95},
+                         }
+                    }
+        
+        return  {'data': data_plot,
+                    'layout' : layout
+                    };
     }
     """,
     Output('plot', 'figure'),
@@ -484,5 +489,4 @@ clientside_callback(
     Input('storage_playing', 'data'),
     Input('title', 'data')
     )
-
 
