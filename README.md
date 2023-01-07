@@ -10,7 +10,9 @@
 
 Bras LJV fournit une plateforme interactive permettant de contrôler à distance un bras robot. Bras LJV est implémenté en Python et repose principalement sur l'outil [Dash](https://dash.plotly.com/) qui permet la rapide création d'applications en Python. 
 
-Le code ici fournit permet une manipulation directe du bras robot présenté dans la publication EDUSCOL: [Support pour une approche fonctionnelle de la robotique](https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique#fichiers-liens).
+Le code permet une manipulation directe du bras robot présenté dans la publication EDUSCOL: [Support pour une approche fonctionnelle de la robotique](https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique#fichiers-liens). 
+
+L'outil interactif développé en facilement paramétrable et peut être facilement modifié pour contrôler un bras robotisé ayant potentiellement une structure différente.
 
 [imgeduscol]: docs/source/_static/logos/eduscol-logo.jpg
 [eduscol]: https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique

@@ -74,7 +74,7 @@ Structure de la documentation
 -----------------------------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     presentation_robot/index.rst
     presentation_interface/index.rst

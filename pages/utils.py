@@ -18,4 +18,20 @@ def dsin(a):
     return np.sin(np.deg2rad(a))
 
 def corr(a,b):
+    """Computes the correlation between two 1D-vectors"""
     return np.vdot(a,b)/ (np.linalg.norm(a)*np.linalg.norm(b))
+
+def in_hull(p, hull):
+    """
+    Test if points in `p` are in `hull`
+
+    `p` should be a `NxK` coordinates of `N` points in `K` dimensions
+    `hull` is either a scipy.spatial.Delaunay object or the `MxK` array of the 
+    coordinates of `M` points in `K`dimensions for which Delaunay triangulation
+    will be computed
+    """
+    from scipy.spatial import Delaunay
+    if not isinstance(hull,Delaunay):
+        hull = Delaunay(hull)
+
+    return hull.find_simplex(p)>=0
