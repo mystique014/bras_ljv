@@ -4,7 +4,7 @@
 
 | **Documentation**         | **Outil interactif en ligne**    | **Vidéos de présentation du projet**  | **Construction du bras**            | **Maquette numérique**         |
 |:------------------------- |:-------------------------------- |:------------------------------------- |:------------------------------------|:------------------------------ |
-| [![][docs-img]][online]   | [![][online-bad]][online]        | [![][badge-vid]][videos]              | [![][eduscol]][eduscol]             | ![Modèle OnShape][onshape]|
+| [![][docs-img]][online]   | ![][online-bad]][online]         | [![][badge-vid]][videos]              | [![][eduscol]][eduscol]             | [![Modèle OnShape][imgonshape]][onshape]     |
 
 
 
@@ -14,13 +14,15 @@ Le code ici fournit permet une manipulation directe du bras robot présenté dan
 
 
 [edudscol]: https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique
+
+[imgonshape]: docs/source/_static/logos/onshape.jpg
 [onshape]: https://julesverne14120.onshape.com/documents/fb4ba6523be7501f68045163/w/2853b905bb40004b2178df92/e/b93caf2cf3a922b87860c5e8?aa=true
 
 [badge-vid]: /youtube/channel/views/:100
 [videos]: https://www.youtube.com/channel/UCu_MwXRD5ky9tDaz5NYaT0w
 
 [online-bad]: https://www.pythonanywhere.com/static/anywhere/images/PA-logo-snake-only.svg
-[online]: quentinduchemin.pythonanywhere.com
+[online]: https://quentinduchemin.pythonanywhere.com
 
 [docs-img]: https://img.shields.io/badge/docs-latest%20release-blue.svg
 
