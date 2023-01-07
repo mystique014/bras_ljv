@@ -131,7 +131,7 @@ class Robot:
         start, end = end, end + np.array([dsin(90+self.bras1-self.bras2-self.bras3)*dcos(180+self.pivot)*lengths[6], dsin(90+self.bras1-self.bras2-self.bras3)*dsin(180+self.pivot)*lengths[6], dcos(90+self.bras1-self.bras2-self.bras3)*lengths[6]])
         maxx, maxy, maxz = self.add(start, end, maxx, maxy, maxz, idxcolor=3, name='Bras 3', showlegend=True)
         start, end = end, end + np.array([dsin(180+self.bras1-self.bras2-self.bras3)*dcos(180+self.pivot)*(lengths[7]+lengths[8]), dsin(180+self.bras1-self.bras2-self.bras3)*dsin(180+self.pivot)*(lengths[7]+lengths[8]), dcos(180+self.bras1-self.bras2-self.bras3)*(lengths[7]+lengths[8])])
-        maxx, maxy, maxz = self.add(start, end, maxx, maxy, maxz, idxcolor=3)
+        maxx, maxy, maxz = self.add(start, end, maxx, maxy, maxz, idxcolor=3, name='Bras 3', showlegend=False)
         d = max(maxx,maxy)
         self.fig.update_layout(
             scene=dict(
@@ -153,7 +153,7 @@ class Robot:
         self.fig.update_layout(scene_aspectmode="cube")
         return self.fig
     
-    def add_2_list(self, start, end, idxcolor=0, name = None, showlegend=False, opacity=1, linewidth=10):
+    def add_2_list(self, start, end, idxcolor=0, name = None, showlegend=False, legendgroup=None, opacity=1, linewidth=10):
         return  go.Scatter3d(
                 x=[start[0],end[0]],
                 y=[start[1],end[1]],
@@ -161,6 +161,7 @@ class Robot:
                 mode="lines",
                 line={"width": linewidth, "color": colors[idxcolor]},
                 name = name,
+                legendgroup = legendgroup,
                 opacity=opacity,
                 showlegend = showlegend
             )
@@ -174,34 +175,34 @@ class Robot:
         data_liste = []
         start, end = np.array([0,0,0]), np.array([0,0,lengths[0]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, name="Socle", showlegend=showlegend, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=showlegend, opacity=opacity))
         start, end = end, np.array([dcos(input['pivot'])*lengths[1], dsin(input['pivot'])*lengths[1], lengths[0]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=False, opacity=opacity))
         start, end = end, end + np.array([dcos(input['pivot']-90)*lengths[2], dsin(input['pivot']-90)*lengths[2], 0])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=False, opacity=opacity))
         if input['bras1']<90:
             start, end = end, end + np.array([dsin(-input['bras1']+90)*dcos(input['pivot'])*lengths[3], dsin(-input['bras1']+90)*dsin(input['pivot'])*lengths[3], dcos(-input['bras1']+90)*lengths[3]])
             maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-            data_liste.append(self.add_2_list(start, end, idxcolor=1, name='Bras 1', showlegend=showlegend, opacity=opacity))
+            data_liste.append(self.add_2_list(start, end, idxcolor=1, legendgroup="1", name='Bras 1', showlegend=showlegend, opacity=opacity))
         else:
             start, end = end, end + np.array([dsin(input['bras1']-90)*dcos(input['pivot']-180)*lengths[3], dsin(input['bras1']-90)*dsin(input['pivot']-180)*lengths[3], dcos(input['bras1']-90)*lengths[3]])
             maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-            data_liste.append(self.add_2_list(start, end, idxcolor=1, name='Bras 1', showlegend=showlegend, opacity=opacity))
+            data_liste.append(self.add_2_list(start, end, idxcolor=1, legendgroup="1", name='Bras 1', showlegend=showlegend, opacity=opacity))
         start, end = end, end + np.array([dcos(input['pivot']+90)*lengths[4], dsin(input['pivot']+90)*lengths[4], 0])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
         
-        data_liste.append(self.add_2_list(start, end, idxcolor=2, name='Bras 2', showlegend=showlegend, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=2, legendgroup="2", name='Bras 2', showlegend=showlegend, opacity=opacity))
         start, end = end, end + np.array([dsin(90+input['bras1']-input['bras2'])*dcos(180+input['pivot'])*lengths[5], dsin(90+input['bras1']-input['bras2'])*dsin(180+input['pivot'])*lengths[5], dcos(90+input['bras1']-input['bras2'])*lengths[5]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)        
-        data_liste.append(self.add_2_list(start, end, idxcolor=2, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=2, legendgroup="2", name='Bras 2', showlegend=False, opacity=opacity))
         start, end = end, end + np.array([dsin(90+input['bras1']-input['bras2']-input['bras3'])*dcos(180+input['pivot'])*lengths[6], dsin(90+input['bras1']-input['bras2']-input['bras3'])*dsin(180+input['pivot'])*lengths[6], dcos(90+input['bras1']-input['bras2']-input['bras3'])*lengths[6]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=3, name='Bras 3', showlegend=showlegend, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=3, legendgroup="3", name='Bras 3', showlegend=showlegend, opacity=opacity))
         start, extreme_point = end, end + np.array([dsin(180+input['bras1']-input['bras2']-input['bras3'])*dcos(180+input['pivot'])*(lengths[7]+lengths[8]), dsin(180+input['bras1']-input['bras2']-input['bras3'])*dsin(180+input['pivot'])*(lengths[7]+lengths[8]), dcos(180+input['bras1']-input['bras2']-input['bras3'])*(lengths[7]+lengths[8])])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, extreme_point)
-        data_liste.append(self.add_2_list(start, extreme_point, idxcolor=3, opacity=opacity))
+        data_liste.append(self.add_2_list(start, extreme_point, idxcolor=3, legendgroup="3", name='Bras 3', showlegend=False, opacity=opacity))
         
         start_arrow = np.copy(start)
 
@@ -219,11 +220,11 @@ class Robot:
         
         start, end = extreme_point, extreme_point + P @ np.array([dsin(input['pince'])*lengths[9], dcos(input['pince'])*lengths[9],0])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=4, opacity=opacity, linewidth=4))
+        data_liste.append(self.add_2_list(start, end, idxcolor=4, legendgroup="4", name="pince", showlegend=showlegend, opacity=opacity, linewidth=4))
         start, end = extreme_point, extreme_point + P @ np.array([-dsin(input['pince'])*lengths[9], -dcos(input['pince'])*lengths[9],0])
 
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=4, opacity=opacity, linewidth=4))
+        data_liste.append(self.add_2_list(start, end, idxcolor=4, legendgroup="4", showlegend=False, opacity=opacity, linewidth=4))
         
         # pompe
         if input['pompe']:
@@ -238,7 +239,8 @@ class Robot:
                 u=[arrow_tip_ratio*vec[0]],
                 v=[arrow_tip_ratio*vec[1]],
                 w=[arrow_tip_ratio*vec[2]],
-                showlegend=False,
+                name='pompe',
+                showlegend=showlegend,
                 showscale=False,
                 colorscale=[[0, colors[3]], [1, colors[3]]]
             ))

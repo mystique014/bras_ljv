@@ -25,7 +25,7 @@ class Cylindre():
         return input['bx'], input['by'], input['bz'], input['ex'], input['ey'], input['ez'], input['r'], input['h']
     
 
-    def draw_shape(self, r, h, a, color='blue', scale_opacity=1):
+    def draw_shape(self, r, h, a, color='blue', name=None, showlegend=None, legendgroup=None, scale_opacity=1):
         """
         parametrize the cylinder of radius r, height h, base point a
         """
@@ -45,22 +45,22 @@ class Cylindre():
 
         for i in range(3):
             corners[:,i] += a[i]*np.ones(40)
-        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], alphahull = 0, color=color, opacity=0.55*scale_opacity)]
+        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], name=name, legendgroup=legendgroup, showlegend=showlegend,  alphahull = 0, color=color, opacity=0.55*scale_opacity)]
 
 
 
             
-    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
-        data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
-        data_current += self.draw_shape(self.r, self.h, np.array([self.bx, self.by, self.bz]), color=color_begin)
+    def draw_current_shapes(self, showlegend=None, color_begin='blue', color_end='orange'):
+        data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), showlegend=showlegend, name="Positions d'arrivée", legendgroup="arrivee", color=color_end, scale_opacity=0.3)
+        data_current += self.draw_shape(self.r, self.h, np.array([self.bx, self.by, self.bz]), showlegend=showlegend, name="Positions des pièces", legendgroup="depart", color=color_begin)
         return data_current
     
 
-    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, showlegend=None, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
 
         extreme_point = extreme_point-self.h*P[:,2]
-        data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
+        data_current = self.draw_shape(self.r, self.h, np.array([self.ex, self.ey, self.ez]), name="Positions d'arrivée", showlegend=showlegend, legendgroup="arrivee", color=color_end)
 
         corners = np.zeros((2*20, 3))
         count = 0
@@ -78,7 +78,7 @@ class Cylindre():
 
         res = P @ corners.T + np.tile(extreme_point.reshape(3,1), (1,40))
 
-        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], alphahull = 0, color=color_begin))
+        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], name="Positions des pièces", legendgroup="depart", showlegend=showlegend, alphahull = 0, color=color_begin))
         return data_current
 
 
@@ -111,7 +111,7 @@ class Rectangle():
         return input['bx'], input['by'], input['bz'], input['ex'], input['ey'], input['ez'], input['theta'], input['longueur'], input['largeur'], input['h']
     
             
-    def draw_shape(self, theta, longueur, largeur, h, a, color='blue', scale_opacity=1):
+    def draw_shape(self, theta, longueur, largeur, h, a, color='blue', showlegend=None, name=None, legendgroup=None, scale_opacity=1):
         """
         parametrize the cylinder of radius r, height h, base point a
         """
@@ -135,22 +135,22 @@ class Rectangle():
         corners = (R@corners.T).T
         for i in range(3):
             corners[:,i] += a[i]*np.ones(8)
-        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], alphahull = 0, color=color, opacity=0.55*scale_opacity)]
+        return [go.Mesh3d(x=corners[:,0],y=corners[:,1],z=corners[:,2], name=name, legendgroup=legendgroup, showlegend=showlegend, alphahull = 0, color=color, opacity=0.55*scale_opacity)]
         
     
             
-    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
-        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
-        data_current += self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.bx, self.by, self.bz]), color=color_begin)
+    def draw_current_shapes(self, showlegend=None, color_begin='blue', color_end='orange'):
+        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), showlegend=showlegend, name="Positions d'arrivée", legendgroup="arrivee", color=color_end, scale_opacity=0.3)
+        data_current += self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.bx, self.by, self.bz]), showlegend=showlegend, name="Positions des pièces", legendgroup="depart", color=color_begin)
         return data_current
     
 
     
-    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, showlegend=None, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
         
         extreme_point = extreme_point-self.h*P[:,2]
-        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), color=color_end)
+        data_current = self.draw_shape(self.theta, self.longueur, self.largeur, self.h, np.array([self.ex, self.ey, self.ez]), showlegend=showlegend, name="Positions d'arrivée", legendgroup="arrivee", color=color_end)
         
         corners = np.zeros((8, 3))
         count = 0
@@ -172,7 +172,7 @@ class Rectangle():
         
         res = P @ cornersT + np.tile(extreme_point.reshape(3,1), (1,8))
         
-        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], alphahull = 0, color=color_begin))
+        data_current.append(go.Mesh3d(x=res[0,:],y=res[1,:],z=res[2,:], name="Positions des pièces", legendgroup="depart", showlegend=showlegend, alphahull = 0, color=color_begin))
         return data_current
         
     def save_excel_file(self, worksheet, count, shape_dic):
@@ -256,17 +256,17 @@ class Shapes():
             
             
            
-    def draw_current_shapes(self, color_begin='blue', color_end='orange'):
-        return self.shape.draw_current_shapes(color_begin=color_begin, color_end=color_end)
+    def draw_current_shapes(self, showlegend=None, color_begin='blue', color_end='orange'):
+        return self.shape.draw_current_shapes(showlegend=showlegend, color_begin=color_begin, color_end=color_end)
 
     
-    def draw_current_tracked_shape(self, extreme_point, P, pince=0, color_begin='blue', color_end='orange'):
+    def draw_current_tracked_shape(self, extreme_point, P, pince=0, showlegend=None, color_begin='blue', color_end='orange'):
         # P: matrice de changement de base de la base cartésienne à la base souhaitée
         if self.shape_type=='Rectangle':
             # if the shape is a rectangle, we take into account the value of the 'pince' in order to ajust the orientation of the shape
-            return self.shape.draw_current_tracked_shape(extreme_point, P, pince=pince, color_begin=color_begin, color_end=color_end)
+            return self.shape.draw_current_tracked_shape(extreme_point, P, pince=pince, showlegend=showlegend, color_begin=color_begin, color_end=color_end)
         else:
-            return self.shape.draw_current_tracked_shape(extreme_point, P, color_begin=color_begin, color_end=color_end)
+            return self.shape.draw_current_tracked_shape(extreme_point, P, showlegend=showlegend, color_begin=color_begin, color_end=color_end)
 
         
     def save_excel_file(self, name_exo, admis_carte, admis_exo, admis_coord):
@@ -306,7 +306,4 @@ class Shapes():
         # Finally, close the Excel file
         # via the close() method.
         workbook.close()
-        
-  #  def correct_release(self):
-        
         

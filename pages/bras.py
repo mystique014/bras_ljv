@@ -228,9 +228,9 @@ def update_param_exo(name_exo):
             
     data = []
     exo = pickle.load(open('./exercices/'+name_exo+'.pkl', "rb"))
-    for el in exo['shapes']:
+    for id_shape, el in enumerate(exo['shapes']):
         shape.update_shape(el)
-        data += shape.draw_current_shapes()
+        data += shape.draw_current_shapes(showlegend=(id_shape==0))
     if exo['admis_exo']:
         disp = {'display': 'block'}
         val_admis = ['show']
@@ -374,12 +374,12 @@ def update_store_button(n_interval, b_reset, b_init, b_sauve, b_carte, input_piv
             shape_playing.update_shape(el)            
             if id_shape != robot.id_tracked_shape:
                 if 'P' in list(el.keys()):
-                    data_playing += shape_playing.draw_current_tracked_shape(el['extreme_point'], el['P'], pince=el['pince'])
+                    data_playing += shape_playing.draw_current_tracked_shape(el['extreme_point'], el['P'], pince=el['pince'], showlegend=(id_shape==0))
                 else:
-                    data_playing += shape_playing.draw_current_shapes()
+                    data_playing += shape_playing.draw_current_shapes(showlegend=(id_shape==0))
             else:
                 shape_playing.update_shape(el)
-                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'])  
+                data_playing += shape_playing.draw_current_tracked_shape(extreme_point, P, pince=mean_pose['pince'], showlegend=(id_shape==0))
 
         if robot.frame == robot.maxframe+1:
             robot.idx_playing += 1

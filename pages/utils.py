@@ -11,6 +11,8 @@ lengths = [61, 45.5, 25.8, 104.3, 16.65, 135.75, 28.45, 27.5, 48.15, 10]
 min_angles = {'pivot': 0, 'bras1':30, 'bras2':70, 'bras3':0, 'pince':0}
 max_angles = {'pivot': 180, 'bras1':120, 'bras2':110, 'bras3':110, 'pince':180}
 
+
+
 def dcos(a):
     return np.cos(np.deg2rad(a))
 
