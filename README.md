@@ -1,10 +1,10 @@
-# Brras LJV (Lycée Jules Verne)
+# Bras LJV (Lycée Jules Verne)
 
 
 
 | **Documentation**         | **Outil interactif en ligne**    | **Vidéos de présentation du projet**  | **Construction du bras**            | **Maquette numérique**         |
 |:------------------------- |:-------------------------------- |:------------------------------------- |:------------------------------------|:------------------------------ |
-| [![][online]][docs-url]   | [![][online]][Bras LJV en ligne] | [![][videos]][Tutoriels vidéos]       | [![][eduscol]][Publication Eduscol] | [![][onshape]][Modèle OnShape] |
+| [![][docs-img]][docs-url] | [![][online]][Bras LJV en ligne] | [![][videos]][Tutoriels vidéos]       | [![][eduscol]][Publication Eduscol] | [![][onshape]][Modèle OnShape] |
 
 
 
@@ -18,3 +18,6 @@ Le code ici fournit permet une manipulation directe du bras robot présenté dan
 
 [videos]: https://www.youtube.com/channel/UCu_MwXRD5ky9tDaz5NYaT0w
 [online]: quentinduchemin.pythonanywhere.com
+[docs-img]: https://img.shields.io/badge/docs-latest%20release-blue.svg
+
+
