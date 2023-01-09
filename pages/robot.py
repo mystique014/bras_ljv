@@ -53,7 +53,7 @@ class Robot:
                                 alphahull=0)
    
     def show_point_end(self, sx, sy, sz, color='blue'):
-        return go.Scatter3d(x=[sx], y=[sy], z=[sz], name="Point de d'arrivée", mode='markers',
+        return go.Scatter3d(x=[sx], y=[sy], z=[sz], name="Point d'arrivée", mode='markers',
                 marker=dict(
                     color=color,  # set color to an array/list of desired values
                     opacity=0.8
