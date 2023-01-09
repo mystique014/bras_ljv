@@ -175,13 +175,13 @@ class Robot:
         data_liste = []
         start, end = np.array([0,0,0]), np.array([0,0,lengths[0]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=showlegend, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Pivot", showlegend=showlegend, opacity=opacity))
         start, end = end, np.array([dcos(input['pivot'])*lengths[1], dsin(input['pivot'])*lengths[1], lengths[0]])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=False, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Pivot", showlegend=False, opacity=opacity))
         start, end = end, end + np.array([dcos(input['pivot']-90)*lengths[2], dsin(input['pivot']-90)*lengths[2], 0])
         maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)
-        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Socle", showlegend=False, opacity=opacity))
+        data_liste.append(self.add_2_list(start, end, idxcolor=0, legendgroup="0", name="Pivot", showlegend=False, opacity=opacity))
         if input['bras1']<90:
             start, end = end, end + np.array([dsin(-input['bras1']+90)*dcos(input['pivot'])*lengths[3], dsin(-input['bras1']+90)*dsin(input['pivot'])*lengths[3], dcos(-input['bras1']+90)*lengths[3]])
             maxx, maxy, maxz = self.update_max(maxx, maxy, maxz, start, end)

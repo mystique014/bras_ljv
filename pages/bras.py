@@ -33,12 +33,17 @@ dash.register_page(__name__)
 
 # Step 2. Import the dataset
 
-pointsin = np.load('./static/pointsin.npy')
-pointsout = np.load('./static/pointsout.npy')
-pointsin = pointsin[np.where(pointsin[:,1]<=0)[0],:]
-pointsout = pointsout[np.where(pointsout[:,1]<=0)[0],:]
-ls_pointsin_admis = pointsin[ConvexHull(pointsin).vertices]
-ls_pointsout_admis = pointsout[ConvexHull(pointsout).vertices]
+# pointsin = np.load('./static/pointsin.npy')
+# pointsout = np.load('./static/pointsout.npy')
+# pointsin = pointsin[np.where(pointsin[:,1]<=0)[0],:]
+# pointsout = pointsout[np.where(pointsout[:,1]<=0)[0],:]
+# ls_pointsin_admis = pointsin[ConvexHull(pointsin).vertices]
+# ls_pointsout_admis = pointsout[ConvexHull(pointsout).vertices]
+# delaunayin = Delaunay(ls_pointsin_admis)
+# delaunayout = Delaunay(ls_pointsout_admis)
+
+ls_pointsin_admis = np.load('./static/ls_pointsin_admis.npy')
+ls_pointsout_admis = np.load('./static/ls_pointsout_admis.npy')
 delaunayin = Delaunay(ls_pointsin_admis)
 delaunayout = Delaunay(ls_pointsout_admis)
 
