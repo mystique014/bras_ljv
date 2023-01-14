@@ -309,11 +309,11 @@ class Robot:
     def init_robot_reel(self, input, pca):
         if self.reel_actif:
             piv, b1, b2, b3, pince, pompe = self.dic2vars(input)
-            pca.servo[0].angle = piv
-            pca.servo[1].angle = b1
-            pca.servo[3].angle = b2
-            pca.servo[4].angle = b3
-            pca.servo[5].angle = pince
+            pca.servo[0].angle = piv+etalonnage['pivot']
+            pca.servo[1].angle = b1+etalonnage['bras1']
+            pca.servo[3].angle = b2+etalonnage['bras2']
+            pca.servo[4].angle = b3+etalonnage['bras3']
+            pca.servo[5].angle = pince+etalonnage['pince']
             self.reel_pose = input     
         
     def update_structure_reel(self, input, pca):
@@ -321,7 +321,7 @@ class Robot:
             try:
                 for key in input.keys():
                     if input[key]!=self.reel_pose[key] and key!='pompe':
-                        pca.servo[key2channel[key]].angle = input[key]
+                        pca.servo[key2channel[key]].angle = input[key]+etalonnage[key]
                 self.reel_pose = input.copy()
             except:
                 self.init_robot_reel(input, pca)
