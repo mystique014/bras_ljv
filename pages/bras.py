@@ -52,20 +52,31 @@ delaunayout = Delaunay(ls_pointsout_admis)
 
 fig = go.Figure(layout = { 'uirevision': 'constant'})
 
-robot = Robot(reel_actif=False)
 
 shape = Shapes()
 
 shape_playing = Shapes()
 
 
-if robot.reel_actif:
+
+try:
     from adafruit_servokit import ServoKit
     nbPCAservo = 16
     pca = ServoKit(channels=nbPCAservo)
+    robot = Robot(reel_actif=True)
     robot.init_robot_reel(robot.pose(), pca)
-else:
+except:
+    robot = Robot(reel_actif=False)
     pca = None
+
+
+# if robot.reel_actif:
+#     from adafruit_servokit import ServoKit
+#     nbPCAservo = 16
+#     pca = ServoKit(channels=nbPCAservo)
+#     robot.init_robot_reel(robot.pose(), pca)
+# else:
+#     pca = None
 
 
 Storage = dcc.Store(
@@ -199,7 +210,7 @@ def update_after_refresh(page_refresh):
 
 @callback(
     Output('robot_reel', 'value'),
-    Input('robot_reel', 'value')        
+    Input('robot_reel', 'value')
 )
 def update_robot_reel(robot_reel):
     print('actif', robot.reel_actif)

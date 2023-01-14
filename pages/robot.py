@@ -251,7 +251,65 @@ class Robot:
             return data_liste, extreme_point # end is the extreme point
     
     
-    def compute_path(self, sx, sy, sz, step_bras1=0.001):
+    
+
+    def compute_path(self, sx, sy, sz):
+        # pivi, bras1i, bras2i, bras3i, pincei = self.dic2vars(pose)        
+        bras1,bras2,bras3 = 0,0,0
+        norm = np.linalg.norm([sx,sy])
+        phi = np.rad2deg(np.arccos(-sx/norm))
+        theta = np.rad2deg(np.arcsin((lengths[2]-lengths[4])/norm))
+        if sy>0 and sx>0:
+            pive = -(phi+theta)
+        elif sy<0 and sx<0:
+            pive = (phi-theta)    
+        elif sy>0 and sx<0:
+            pive = -(phi+theta)    
+        else:
+            pive = (phi-theta) 
+                
+        point_end = np.array([sx,sy,sz])
+        point_b2_b3 = point_end+np.array([dcos(pive)*lengths[6],dsin(pive)*lengths[6],(lengths[7]+lengths[8])])
+        
+        point_b1_b2 = np.array([dcos(pive)*lengths[1], dsin(pive)*lengths[1], lengths[0]])
+        point_b1_b2 += np.array([dcos(pive-90)*lengths[2], dsin(pive-90)*lengths[2], 0])
+        
+        test_bras1 = min_angles['bras1']
+        solution_found = False
+        low_bras1 = min_angles['bras1']
+        up_bras1 = max_angles['bras1']
+        test_bras1 = (low_bras1 + up_bras1)/2
+        
+        while (not(solution_found) and ((up_bras1-low_bras1)>1e-2)):
+            if test_bras1<90:
+                point_after_bras1 = point_b1_b2 + np.array([dsin(-test_bras1+90)*dcos(pive)*lengths[3], dsin(-test_bras1+90)*dsin(pive)*lengths[3], dcos(-test_bras1+90)*lengths[3]])
+            else:
+                point_after_bras1 = point_b1_b2 + np.array([dsin(test_bras1-90)*dcos(pive-180)*lengths[3], dsin(test_bras1-90)*dsin(pive-180)*lengths[3], dcos(test_bras1-90)*lengths[3]])
+            point_after_bras1_deep = point_after_bras1 + np.array([dcos(pive+90)*lengths[4], dsin(pive+90)*lengths[4], 0])
+            v1 = point_b1_b2-point_after_bras1
+            v1 /= np.linalg.norm(v1)
+            v2 = point_b2_b3-point_after_bras1_deep
+            norm2 = np.linalg.norm(v2)
+            v2 /= np.linalg.norm(v2)
+            test_bras2 = np.rad2deg(np.arccos(np.vdot(v1,v2)))
+            test_bras3 = test_bras1 - test_bras2
+            if lengths[5]-0.75<=norm2<=lengths[5]+0.75 and min_angles['bras3']<=test_bras3<=max_angles['bras3'] and min_angles['bras2']<=test_bras2<=max_angles['bras2']:
+                solution_found = True
+                bras1 = test_bras1
+                bras2 = test_bras2
+                bras3 = test_bras3
+            else:
+                if norm2<=lengths[5]:
+                    up_bras1 = test_bras1
+                    test_bras1 = (low_bras1 + up_bras1)/2
+                else:
+                    low_bras1 = test_bras1
+                    test_bras1 = (low_bras1 + up_bras1)/2
+        return solution_found, self.vars2dic(pive, bras1, bras2, bras3, 0, 0)
+    
+    
+    
+    def compute_path_old(self, sx, sy, sz, step_bras1=0.001):
         # pivi, bras1i, bras2i, bras3i, pincei = self.dic2vars(pose)        
         bras1,bras2,bras3 = 0,0,0
         norm = np.linalg.norm([sx,sy])
@@ -314,6 +372,10 @@ class Robot:
             pca.servo[3].angle = b2+etalonnage['bras2']
             pca.servo[4].angle = b3+etalonnage['bras3']
             pca.servo[5].angle = pince+etalonnage['pince']
+            if input['pompe']:
+                pca.servo[6].angle = 180
+            else:
+                pca.servo[6].angle = 0
             self.reel_pose = input     
         
     def update_structure_reel(self, input, pca):
@@ -322,7 +384,13 @@ class Robot:
                 for key in input.keys():
                     if input[key]!=self.reel_pose[key] and key!='pompe':
                         pca.servo[key2channel[key]].angle = input[key]+etalonnage[key]
+                if input['pompe']!=self.reel_pose['pompe']:
+                    if input['pompe']:
+                        pca.servo[key2channel['pompe']].angle = 180
+                    else:
+                        pca.servo[key2channel['pompe']].angle = 0
                 self.reel_pose = input.copy()
+
             except:
                 self.init_robot_reel(input, pca)
 
