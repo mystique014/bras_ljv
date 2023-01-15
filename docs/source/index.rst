@@ -65,7 +65,7 @@ Le projet mobilise des outils
     Lien virtuel / Réel
 
 -- D'algorithmique
-    Réaliser un ordonnacement de tâches
+    Réaliser un ordonnancement de tâches
 
 -- De construction et modélisation
     Assemblage du robot réel, Virtuel avec Onshape

@@ -15,7 +15,7 @@ Bouger le bras robotisé
 
 
 
-Il est possible de bouger le bras en adoptant deux différentes stratégies.
+Il est possible de bouger le bras en adoptant deux stratégies différentes .
 
 1. En agissant directement sur les différents moteurs controlant les mouvements du bras robot (voir :red:`la zone rouge` sur l'image en bas de page). Pour cela, il suffit de modifier les sliders *pivot*, *bras 1*, *bras 2*, *bras 3* ou *pince*. Les sliders représentent les valeurs des angles à transmettre au robot pour mettre en action le moteur correspondant. La définition de ces angles est visible en cliquant sur le bouton **Schéma du Robot** situé tout en haut de l'interface. Après le mouvement de chaque slider, le mouvement du robot virtuel est directement acutalisé.
 
