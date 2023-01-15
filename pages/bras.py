@@ -63,6 +63,8 @@ try:
     from adafruit_servokit import ServoKit
     nbPCAservo = 16
     pca = ServoKit(channels=nbPCAservo)
+    for key, channel in key2channel.items():
+        pca.servo[channel].set_pulse_width_range(min_imp[key] , max_imp[key])
     robot = Robot(reel_actif=True)
     robot.init_robot_reel(robot.pose(), pca)
 except:
@@ -118,15 +120,15 @@ for key in min_angles.keys():
                marks={str(i): str(i) for i in np.arange(min_angles[key],max_angles[key],20)},
                 value=getattr(robot,key), id = key, vertical=True,
                 tooltip={"placement": "bottom", "always_visible": True})
-Rx = dcc.Slider(-200, 200, 1, 
+Rx = dcc.Slider(-250, 250, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
            value=robot.extreme_point[0], id = 'Rx', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
-Ry = dcc.Slider(-200, 200, 1, 
+Ry = dcc.Slider(-300, 0, 1, 
            marks={str(i): str(i) for i in np.arange(-200,200,100)},
            value=robot.extreme_point[1], id = 'Ry', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
-Rz = dcc.Slider(0, 200, 1, 
+Rz = dcc.Slider(0, 300, 1, 
            marks={str(i): str(i) for i in np.arange(0,200,50)},
            value=robot.extreme_point[2], id = 'Rz', vertical=True,
            tooltip={"placement": "bottom", "always_visible": True})
@@ -192,12 +194,14 @@ layout = dbc.Container(
 def update_after_refresh(page_refresh):
     global robot
     global pca
+#    try:
+    from adafruit_servokit import ServoKit
+    robot = Robot(reel_actif=True)
     try:
-        from adafruit_servokit import ServoKit
-        robot = Robot(reel_actif=True)
-
         nbPCAservo = 16
         pca = ServoKit(channels=nbPCAservo)
+        for key, channel in key2channel.items():
+            pca.servo[channel].set_pulse_width_range(min_imp[key] , max_imp[key])
         robot.init_robot_reel(robot.pose(), pca)
         return False, list_exos
     except:

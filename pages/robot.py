@@ -11,6 +11,7 @@ import time
 
 from pages.utils import *
 from pulp import *
+from scipy import optimize
 
 
 
@@ -367,11 +368,11 @@ class Robot:
     def init_robot_reel(self, input, pca):
         if self.reel_actif:
             piv, b1, b2, b3, pince, pompe = self.dic2vars(input)
-            pca.servo[0].angle = piv+etalonnage['pivot']
-            pca.servo[1].angle = b1+etalonnage['bras1']
-            pca.servo[3].angle = b2+etalonnage['bras2']
-            pca.servo[4].angle = b3+etalonnage['bras3']
-            pca.servo[5].angle = pince+etalonnage['pince']
+            pca.servo[0].angle = self.correction_angle_reel('pivot', piv)
+            pca.servo[1].angle = self.correction_angle_reel('bras1', b1)
+            pca.servo[3].angle = self.correction_angle_reel('bras2', b2)
+            pca.servo[4].angle = self.correction_angle_reel('bras3', b3)
+            pca.servo[5].angle = self.correction_angle_reel('pince', pince)
             if input['pompe']:
                 pca.servo[6].angle = 180
             else:
@@ -383,7 +384,7 @@ class Robot:
             try:
                 for key in input.keys():
                     if input[key]!=self.reel_pose[key] and key!='pompe':
-                        pca.servo[key2channel[key]].angle = input[key]+etalonnage[key]
+                        pca.servo[key2channel[key]].angle = self.correction_angle_reel(key, input[key])
                 if input['pompe']!=self.reel_pose['pompe']:
                     if input['pompe']:
                         pca.servo[key2channel['pompe']].angle = 180
@@ -393,13 +394,30 @@ class Robot:
 
             except:
                 self.init_robot_reel(input, pca)
+                
+    def correction_angle_reel(self, key, angle):
+        if key == 'bras2': #modif for bras2
+            a = 56.86
+            b = 38.61
+            c = 56.72
+            d = 25.39
+            c1 = -2*d*b*dsin(angle)
+            c2 = -2 * (a-b*dcos(angle))*d
+            c3 = d**2 + (a-b*dcos(angle))**2 - c**2 + b**2 * dsin(angle)**2
+            root = optimize.newton(lambda v: c1*np.sqrt(1-v**2)+c2*v+c3, -.9, fprime=lambda v: c2 -v*c1/np.sqrt(1-v**2))    
+            the =  (np.rad2deg(np.arcsin(root)))
+            return (180-(90-the)  + etalonnage[key])
+            # solve c1 * x + c2 * sqrt(1-x**2) +c3 = 0
+            # x is correpsonding to cos(90-theta)
+        else:
+            return (angle+etalonnage[key])
 
     def correct_release(self, direction):
         if corr(direction, np.array([0,0,1]))>=0.95:
             return True
         else:
             return False
-
+        
     def conflict(self, extreme_point, P, pince):
         
         conflict = False
