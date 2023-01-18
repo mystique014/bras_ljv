@@ -194,10 +194,9 @@ layout = dbc.Container(
 def update_after_refresh(page_refresh):
     global robot
     global pca
-#    try:
-    from adafruit_servokit import ServoKit
-    robot = Robot(reel_actif=True)
     try:
+        from adafruit_servokit import ServoKit
+        robot = Robot(reel_actif=True)
         nbPCAservo = 16
         pca = ServoKit(channels=nbPCAservo)
         for key, channel in key2channel.items():
