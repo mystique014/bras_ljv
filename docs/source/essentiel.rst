@@ -1,5 +1,6 @@
 L'essentiel pour commencer
 ==========================
+Dans ce chapitre vous allez trouver toutes les informations concernant le montage, le cablage et la configuration du robot.
 
 Le matériel :
 -------------
@@ -27,6 +28,11 @@ Le bras robot ARM-21N2
    :align: middle
 
 .. |alim| image:: ./_static/images/alim.png
+   :width: 50pt
+   :height: 50pt
+   :align: middle
+
+.. |convertisseur| image:: ./_static/images/convertisseur.png
    :width: 50pt
    :height: 50pt
    :align: middle
@@ -60,10 +66,14 @@ Le bras robot ARM-21N2
         ventouse
         électrovanne
         interrupteur électronique pwm
-   * - Alimentation 5V
+   * - Alimentation 220v AC - 12V DC
      - |alim|
      - 1
-     - Alimentation 5V 10A
+     - Alimentation 220V - 12V 10A
+   * - Réducteur 12V -5V
+     - |convertisseur|
+     - 1
+     - Régulateur Réducteur 12v - 5v  DC
 
 Le montage du robot :
 ---------------------
@@ -97,28 +107,100 @@ Selectionner la carte SD (Attention au choix du bon lecteur)
 
 Appuyez sur Write
 
-Le cablage du bras robot
-------------------------
+Le cablage du module PCA9685
+----------------------------
 
 Le Raspberry Pi possède des broches réservées pour la communication I2C (GPIO2/GPIO3).
 Le module est muni d’un bus I2C et d’une entrée de puissance. 
 Le bus I2C est branché comme ceci:
 
 Broche GPIO3 ou SCL à la broche SCL du module
+
 Broche GPIO2 ou SDA à la broche SDA du module
+
 Broche 5V à la broche Vcc du module
+
 Broche GND à la broche GND du module
 
 .. image:: _static/images/cablage.png
   :width: 400
- 
+
+
+Le montage du boitier contenant l'électronique
+----------------------------------------------
+Imprimer le boitier à partir des fichiers STL
+
+`Récupérer les fichiers sur ONSHAPE <https://youtu.be/_217MOG0m8g>`__
+
+Fixer le boitier imprimé en 3D sur le support.
+
+.. image:: _static/images/composants.jpg
+  :width: 400
+
+Effectuer les branchements.
+
+.. image:: _static/images/composants1.jpg
+  :width: 400
+
+Monter le RPI dans le boitier en le calant bien sur les nervures prévues pour cela.
+Vérifier l'alignement de la prise RJ45
+
+.. image:: _static/images/composants2.jpg
+  :width: 400
+
+Brancher l'alimentation 5V et visser le PCA99685
+
+.. image:: _static/images/composants3.jpg
+  :width: 400
+
+Raccorder les servos moteurs
+
+.. image:: _static/images/composants5.png
+  :width: 400
+
+port 0 : pivot
+
+port 1 : bras1
+
+port 2 : bras1 bis
+
+port 3 : bras2
+
+port 4 : bras3
+
+port 5 : pince
+
+port 6 : pompe
+
+port 7 : électrovanne
+
+Monter le capot de protection
+
+.. image:: _static/images/composants4.jpg
+  :width: 400
+
+Brancher le RPI
+
 La configuration réseau
 -----------------------
 
-L'accès au RPI se fait en wifi en se connectant au point d'accès dont le nom est : Raspi-Webgui
+L'accès au RPI se fait en wifi en se connectant au point d'accès :
 
-Dans un navigateur saisir l'adresse 10.3.141.1:8050
+SSID: raspi-webgui
+
+Password: ChangeMe
 
 .. image:: _static/images/pa.png
   :width: 400
+
+Il n'y a rien d'autre à configurer.
+
+Lorsque le RPI est branché, le système est entièrement fonctionnel en patientant environ 2 mn.
+
+Dans un navigateur saisir l'adresse 10.3.141.1:8050
+
+Vous pouvez utiliser n'importe quel média (mobile, tablette ou PC) pourvu qu'il soit connecté au point d'accès mentionné ci-dessus.
+
+L'interface est maintenant accessible !
+
  
