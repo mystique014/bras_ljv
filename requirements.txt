@@ -1,4 +1,10 @@
 numpy
 scipy
 dash
+pulp
+matplotlib
+pickle
+setuptools
+wheels
+adafruit-io
 dash_bootstrap_components
