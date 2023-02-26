@@ -7,10 +7,10 @@
 import numpy as np
 colors = ['blue', 'red', 'brown', 'black', 'purple']
 key2channel = {'pivot':0, 'bras1':1, 'bras2':3, 'bras3':4, 'pince':5, 'pompe':6}
-lengths = [84.3, 45.5, 25.8, 104.3, 16.65, 135.75, 28.45, 27.5, 48.15, 10]
+lengths = [84.3, 45.5, 25.8, 104.3, 16.65, 135.75, 28.45, 27.5, 48.15, 1]
 min_angles = {'pivot': 0, 'bras1':30, 'bras2':70, 'bras3':0, 'pince':0}
 max_angles = {'pivot': 180, 'bras1':120, 'bras2':110, 'bras3':110, 'pince':180}
-etalonnage = {'pivot': -7, 'bras1': 0, 'bras2': 0, 'bras3': 45, 'pince':0}
+etalonnage = {'pivot': -5, 'bras1': -5, 'bras2': 0, 'bras3': 45, 'pince':0}
 
 min_imp = {'pivot': 500, 'bras1': 500, 'bras2': 500, 'bras3': 500, 'pince': 500, 'pompe': 500}
 max_imp = {'pivot': 2500, 'bras1': 2500, 'bras2': 2500, 'bras3': 2500, 'pince': 2500, 'pompe': 2500}

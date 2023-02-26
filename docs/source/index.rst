@@ -118,6 +118,6 @@ Structure de la documentation
 
     presentation_robot/index.rst
     presentation_interface/index.rst
-    essentiel.rst
+    essentiel/essentiel.rst
     exercices/index.rst
     perspectives/index.rst

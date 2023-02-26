@@ -1,5 +1,6 @@
 L'essentiel pour commencer
 ==========================
+
 Dans ce chapitre vous allez trouver toutes les informations concernant le montage, le cablage et la configuration du robot.
 
 Le matériel :
@@ -7,32 +8,32 @@ Le matériel :
 
 Le bras robot ARM-21N2
 
-.. |bras| image:: ./_static/images/bras_onshape.png
+.. |bras| image:: ../_static/images/bras_onshape.png
    :width: 50pt
    :height: 50pt
    :align: middle
 
-.. |rpi| image:: ./_static/images/rpi.png
+.. |rpi| image:: ../_static/images/rpi.png
    :width: 50pt
    :height: 50pt
    :align: middle
 
-.. |pca| image:: ./_static/images/pca9685.png
+.. |pca| image:: ../_static/images/pca9685.png
    :width: 50pt
    :height: 50pt
    :align: middle
 
-.. |pompe| image:: ./_static/images/kit_pompe.png
+.. |pompe| image:: ../_static/images/kit_pompe.png
    :width: 50pt
    :height: 50pt
    :align: middle
 
-.. |alim| image:: ./_static/images/alim.png
+.. |alim| image:: ../_static/images/alim.png
    :width: 50pt
    :height: 50pt
    :align: middle
 
-.. |convertisseur| image:: ./_static/images/convertisseur.png
+.. |convertisseur| image:: ../_static/images/convertisseur.png
    :width: 50pt
    :height: 50pt
    :align: middle
@@ -80,14 +81,19 @@ Le montage du robot :
 
 Le modèle 3D et les plans du bras ARM-21N2 sont accessibles en cliquant sur l'image.
 
-.. image:: ./_static/images/plan.png
+.. image:: ../_static/images/plan.png
   :width: 200
   :target: https://julesverne14120.onshape.com/documents/fb4ba6523be7501f68045163/w/2853b905bb40004b2178df92/e/b93caf2cf3a922b87860c5e8?configuration=List_h16Eqq6S286hiw%3DCopie_de_mise_en_plan&renderMode=0&uiState=63af27d3eb663a699c38a184
 
 La carte SD et l'image du Rpi
 -----------------------------
 
-Pour utiliser le robot, il sera nécessaire de copier l'image du RPI sur la carte SD.
+Pour utiliser le robot, il sera nécessaire de copier l'image du RPI sur la carte SD ou de créer sa propre carte SD en suivant ce 
+
+.. toctree::
+    :maxdepth: 1
+
+    ./tuto.rst
 
 Le raspberry pi est configuré au niveau wifi et le package python est déjà dans l'image.
 
@@ -122,7 +128,7 @@ Broche 5V à la broche Vcc du module
 
 Broche GND à la broche GND du module
 
-.. image:: _static/images/cablage.png
+.. image:: ../_static/images/cablage.png
   :width: 400
 
 
@@ -134,28 +140,28 @@ Imprimer le boitier à partir des fichiers STL
 
 Fixer le boitier imprimé en 3D sur le support.
 
-.. image:: _static/images/composants.jpg
+.. image:: ../_static/images/composants.jpg
   :width: 400
 
 Effectuer les branchements.
 
-.. image:: _static/images/composants1.jpg
+.. image:: ../_static/images/composants1.jpg
   :width: 400
 
 Monter le RPI dans le boitier en le calant bien sur les nervures prévues pour cela.
 Vérifier l'alignement de la prise RJ45
 
-.. image:: _static/images/composants2.jpg
+.. image:: ../_static/images/composants2.jpg
   :width: 400
 
 Brancher l'alimentation 5V et visser le PCA99685
 
-.. image:: _static/images/composants3.jpg
+.. image:: ../_static/images/composants3.jpg
   :width: 400
 
 Raccorder les servos moteurs
 
-.. image:: _static/images/composants5.png
+.. image:: ../_static/images/composants5.png
   :width: 400
 
 port 0 : pivot
@@ -176,7 +182,7 @@ port 7 : électrovanne
 
 Monter le capot de protection
 
-.. image:: _static/images/composants4.jpg
+.. image:: ../_static/images/composants4.jpg
   :width: 400
 
 Brancher le RPI
@@ -190,7 +196,7 @@ SSID: raspi-webgui
 
 Password: ChangeMe
 
-.. image:: _static/images/pa.png
+.. image:: ../_static/images/pa.png
   :width: 400
 
 Il n'y a rien d'autre à configurer.
@@ -203,4 +209,7 @@ Vous pouvez utiliser n'importe quel média (mobile, tablette ou PC) pourvu qu'il
 
 L'interface est maintenant accessible !
 
- 
+ .. toctree::
+     :maxdepth: 1
+
+     tuto.rst
