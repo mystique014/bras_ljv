@@ -1,7 +1,7 @@
 Tutoriel
 ========
 
-Copyright (C) 2023 Stéphane Duchemin
+Copyright (C) 2023 Stéphane Duchemin & Quentin Duchemin
 # Licensed under the Creative Commons Attribution-ShareAlike License 4.0 (International) (CC-BY-SA 4.0) -https://creativecommons.org/licenses/by-sa/4.0/
 
 Les étapes de création de la carte SD

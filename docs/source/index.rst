@@ -15,11 +15,11 @@ BRAS ROBOTISE COMMANDE A DISTANCE
 |                  | de                 | vidéos        | Eduscol        | OnShape    |
 |                  | l’outil <ht        | <https://     | <https://edus  | <https:    |
 |                  | tps://quent        | www.youtube.c | col.education  | //julesver |
-|                  | induchemin.        | om/channel/UC | .fr/sti/resso  | ne14120.on |
-|                  | pythonanywh        | u_MwXRD5ky9tD | urces_pedagog  | shape.com/ |
-|                  | ere.com>`__        | az5NYaT0w>`__ | iques/support  | documents/ |
-|                  |                    |               | -pour-une-app  | fb4ba6523b |
-|                  |                    |               | roche-fonctio  | e7501f6804 |
+|                  | induchemin.        | om/watch?v=sS | .fr/sti/resso  | ne14120.on |
+|                  | pythonanywh        | 5ZbTYIjPs&lis | urces_pedagog  | shape.com/ |
+|                  | ere.com>`__        | t=PLzeGpFCqKT | iques/support  | documents/ |
+|                  |                    | oY27az1D__cKc | -pour-une-app  | fb4ba6523b |
+|                  |                    | Z_5sQzo7Le>`_ | roche-fonctio  | e7501f6804 |
 |                  |                    |               | nnelle-de-la-  | 5163/w/285 |
 |                  |                    |               | robotique>`__  | 3b905bb400 |
 |                  |                    |               |                | 04b2178df9 |
@@ -31,7 +31,7 @@ BRAS ROBOTISE COMMANDE A DISTANCE
 
 
 .. |image0| image:: https://img.shields.io/badge/docs-latest%20release-blue.svg
-   :target: https://quentinduchemin.pythonanywhere.com
+   :target: https://quentin-duchemin.github.io/brasLJV/
 .. |image1| image:: ./_static/logos/pyany.jpg
    :target: https://quentinduchemin.pythonanywhere.com
 .. |image2| image:: ./_static/logos/youtube.png
