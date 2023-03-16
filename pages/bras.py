@@ -111,7 +111,7 @@ Choice_exo = dcc.Dropdown(
 )
 
 Interval = dcc.Interval(id='graph-refresher',
-                     interval=1*600,
+                     interval=1*400,
                      n_intervals=0,
                      max_intervals=50,
                      disabled=True)

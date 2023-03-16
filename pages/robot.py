@@ -29,7 +29,7 @@ class Robot:
             for key, value in input.items():
                 setattr(self, key, value)
         self.frame = 0
-        self.maxframe = 5
+        self.maxframe = 3
         self.fig = go.Figure({'data': []})
         self.trace = []
         self.save = []    
