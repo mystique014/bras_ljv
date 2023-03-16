@@ -99,7 +99,7 @@ Le raspberry pi est configuré au niveau wifi et le package python est déjà da
 
 Utilsez une carte micro SD de 16Go montée dans un adaptateur SD
 
-1- `Téléchargez l'image <http://sourceforge.net/projects/win32diskimager/files/latest/download>`_
+1- Télécharger l'image sur le site Eduscol
 
 2- Copier l'image sur la carte SD :
 

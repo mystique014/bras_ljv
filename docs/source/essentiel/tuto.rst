@@ -6,7 +6,9 @@ Copyright (C) 2023 Stéphane Duchemin
 
 Les étapes de création de la carte SD
 
-**1 - Télécharger et installer l'image de raspbian à partir de https://www.raspberrypi.com/software/**
+**1 - Télécharger et installer l'image de raspbian à partir de :** 
+
+https://www.raspberrypi.com/software/
 
 Choisir "imager" version Raspbian 64bits lite dans Raspberry pi OS (other)
 
@@ -28,7 +30,7 @@ Cliquer sur la roue crantée
 
     Pays WIFI : fr 
 
-    Définir les réglges locaux
+    Définir les réglages locaux
 
         Fuseau horaire : EUROPE:PARIS
 
@@ -74,7 +76,7 @@ https://github.com/mystique014/bras_ljv
 
 ATTENTION SE CONNECTER en SSH puis sudo su (faire les install de paquet en super user)
 
-Pip3 install dash, scipy, pulp, etc....
+sudo pip3 install dash, scipy, pulp, etc....
 
 Penser à installer le paquet pour le module PCA9685 adafruit
 
