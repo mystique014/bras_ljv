@@ -3,39 +3,37 @@ BRAS ROBOTISE COMMANDE A DISTANCE
 
 
 
-+------------------+--------------------+---------------+----------------+------------+
-|**Documentation** | **Outil interactif | **Vidéos de   | **Construction | **Maquette |
-|                  | en ligne**         | présentation  | du bras**      | numérique**|
-|                  |                    | du projet**   |                |            |
-+==================+====================+===============+================+============+
-| |image0|         | |image1|           | |image2|      | |image3|       | |Modèle    |
-|                  |                    |               |                | OnShape|   |
-+------------------+--------------------+---------------+----------------+------------+
-|                  | `Découverte        | `Tutoriels en | `Publication   | `Modèle    |
-|                  | de                 | vidéos        | Eduscol        | OnShape    |
-|                  | l’outil <ht        | <https://     | <https://edus  | <https:    |
-|                  | tps://quent        | www.youtube.c | col.education  | //julesver |
-|                  | induchemin.        | om/watch?v=sS | .fr/sti/resso  | ne14120.on |
-|                  | pythonanywh        | 5ZbTYIjPs&lis | urces_pedagog  | shape.com/ |
-|                  | ere.com>`__        | t=PLzeGpFCqKT | iques/support  | documents/ |
-|                  |                    | oY27az1D__cKc | -pour-une-app  | fb4ba6523b |
-|                  |                    | Z_5sQzo7Le>`_ | roche-fonctio  | e7501f6804 |
-|                  |                    |               | nnelle-de-la-  | 5163/w/285 |
-|                  |                    |               | robotique>`__  | 3b905bb400 |
-|                  |                    |               |                | 04b2178df9 |
-|                  |                    |               |                | 2/e/b93caf |
-|                  |                    |               |                | 2cf3a922b8 |
-|                  |                    |               |                | 7860c5e8?a |
-|                  |                    |               |                | a=true>`__ |
-+------------------+--------------------+---------------+----------------+------------+
++------------------+--------------------+----------------+------------+
+|**Documentation** | **Outil interactif | **Construction | **Maquette |
+|                  | en ligne**         | du bras**      | numérique**|
+|                  |                    |                |            |
++==================+====================+================+============+
+| |image0|         | |image1|           | |image3|       | |Modèle    |
+|                  |                    |                | OnShape|   |
++------------------+--------------------+----------------+------------+
+|                  | `Découverte        | `Publication   | `Modèle    |
+|                  | de                 | Eduscol        | OnShape    |
+|                  | l’outil <ht        | <https://edus  | <https:    |
+|                  | tps://quent        | col.education  | //julesver |
+|                  | induchemin.        | .fr/sti/resso  | ne14120.on |
+|                  | pythonanywh        | urces_pedagog  | shape.com/ |
+|                  | ere.com>`__        | iques/support  | documents/ |
+|                  |                    | -pour-une-app  | fb4ba6523b |
+|                  |                    | roche-fonctio  | e7501f6804 |
+|                  |                    | nnelle-de-la-  | 5163/w/285 |
+|                  |                    | robotique>`__  | 3b905bb400 |
+|                  |                    |                | 04b2178df9 |
+|                  |                    |                | 2/e/b93caf |
+|                  |                    |                | 2cf3a922b8 |
+|                  |                    |                | 7860c5e8?a |
+|                  |                    |                | a=true>`__ |
++------------------+--------------------+----------------+------------+
 
 
 .. |image0| image:: https://img.shields.io/badge/docs-latest%20release-blue.svg
    :target: https://quentin-duchemin.github.io/brasLJV/
 .. |image1| image:: ./_static/logos/pyany.jpg
    :target: https://quentinduchemin.pythonanywhere.com
-.. |image2| image:: ./_static/logos/youtube.png
-   :target: https://www.youtube.com/channel/UCu_MwXRD5ky9tDaz5NYaT0w
 .. |image3| image:: ./_static/logos/eduscol-logo.jpg
    :target: https://eduscol.education.fr/sti/ressources_pedagogiques/support-pour-une-approche-fonctionnelle-de-la-robotique
 .. |Modèle OnShape| image:: ./_static/logos/onshape.jpg
